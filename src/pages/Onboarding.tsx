@@ -1,47 +1,54 @@
 import { useState } from 'react'
 import { ArrowRight, Check } from 'lucide-react'
 import { CategoryIcon } from '../components/CategoryIcon'
-import { formatCurrency, getCurrentYearMonth } from '../utils/formatters'
+import { formatCurrency } from '../utils/formatters'
 
 interface Props {
-  onComplete: (budget?: number) => void
+  onComplete: (name: string, budget?: number) => void
 }
 
-const STEPS = 3
+const STEPS = 4
 
 const PREVIEWS = [
-  { icon: 'utensils', color: '#F97316', label: 'Food' },
-  { icon: 'car',      color: '#3B82F6', label: 'Transport' },
-  { icon: 'film',     color: '#EC4899', label: 'Fun' },
-  { icon: 'zap',      color: '#EAB308', label: 'Bills' },
+  { icon: 'utensils', color: '#F97316' },
+  { icon: 'car',      color: '#3B82F6' },
+  { icon: 'film',     color: '#EC4899' },
+  { icon: 'zap',      color: '#EAB308' },
 ]
 
 export function Onboarding({ onComplete }: Props) {
   const [step, setStep] = useState(0)
+  const [name, setName] = useState('')
   const [amount, setAmount] = useState('')
-  const [error, setError] = useState('')
+  const [amountError, setAmountError] = useState('')
 
   const parsedAmount = parseFloat(amount)
   const hasValidAmount = amount.trim() && !isNaN(parsedAmount) && parsedAmount > 0
 
-  function handleBudgetNext() {
-    if (amount.trim()) {
-      if (isNaN(parsedAmount) || parsedAmount <= 0) {
-        setError('Please enter a valid amount.')
-        return
-      }
-      if (parsedAmount > 10_000_000) {
-        setError('Amount seems too large.')
-        return
-      }
-    }
-    setError('')
+  function handleNameNext() {
     setStep(2)
   }
 
-  function handleComplete() {
-    onComplete(hasValidAmount ? parsedAmount : undefined)
+  function handleBudgetNext() {
+    if (amount.trim()) {
+      if (isNaN(parsedAmount) || parsedAmount <= 0) {
+        setAmountError('Please enter a valid amount.')
+        return
+      }
+      if (parsedAmount > 10_000_000) {
+        setAmountError('Amount seems too large.')
+        return
+      }
+    }
+    setAmountError('')
+    setStep(3)
   }
+
+  function handleComplete() {
+    onComplete(name.trim(), hasValidAmount ? parsedAmount : undefined)
+  }
+
+  const firstName = name.trim().split(' ')[0]
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-between px-6 pt-20 pb-14 max-w-[430px] mx-auto">
@@ -63,10 +70,10 @@ export function Onboarding({ onComplete }: Props) {
       {/* Content */}
       <div className="flex-1 flex flex-col items-center justify-center w-full text-center">
 
+        {/* Welcome */}
         {step === 0 && (
           <div className="space-y-6 w-full">
-            {/* Icon preview */}
-            <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="flex items-center justify-center gap-3">
               {PREVIEWS.map(p => (
                 <div
                   key={p.icon}
@@ -77,7 +84,6 @@ export function Onboarding({ onComplete }: Props) {
                 </div>
               ))}
             </div>
-
             <div className="space-y-3">
               <h1 className="text-4xl font-bold tracking-tighter text-zinc-50">Gastos</h1>
               <p className="text-base text-zinc-500 font-medium leading-relaxed max-w-xs mx-auto">
@@ -87,7 +93,28 @@ export function Onboarding({ onComplete }: Props) {
           </div>
         )}
 
+        {/* Name */}
         {step === 1 && (
+          <div className="space-y-6 w-full">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter text-zinc-50">What's your name?</h2>
+              <p className="text-sm text-zinc-500 font-medium">So we know what to call you.</p>
+            </div>
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              maxLength={40}
+              autoFocus
+              onKeyDown={e => e.key === 'Enter' && handleNameNext()}
+              className="w-full bg-transparent text-3xl font-bold tracking-tighter text-zinc-50 placeholder:text-zinc-700 focus:outline-none text-center"
+            />
+          </div>
+        )}
+
+        {/* Budget */}
+        {step === 2 && (
           <div className="space-y-6 w-full">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter text-zinc-50">Set a budget</h2>
@@ -95,9 +122,8 @@ export function Onboarding({ onComplete }: Props) {
                 How much do you want to spend this month? You can skip this and set it later.
               </p>
             </div>
-
             <div
-              className="rounded-3xl p-5"
+              className="rounded-3xl p-5 text-left"
               style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
             >
               <div className="flex items-baseline gap-2">
@@ -107,7 +133,7 @@ export function Onboarding({ onComplete }: Props) {
                   inputMode="decimal"
                   placeholder="0.00"
                   value={amount}
-                  onChange={e => { setAmount(e.target.value); setError('') }}
+                  onChange={e => { setAmount(e.target.value); setAmountError('') }}
                   min="0"
                   step="0.01"
                   autoFocus
@@ -117,12 +143,13 @@ export function Onboarding({ onComplete }: Props) {
               {hasValidAmount && (
                 <p className="text-sm text-zinc-500 mt-2 font-medium">{formatCurrency(parsedAmount)} / month</p>
               )}
-              {error && <p className="text-red-400 text-xs mt-2 font-medium" role="alert">{error}</p>}
+              {amountError && <p className="text-red-400 text-xs mt-2 font-medium" role="alert">{amountError}</p>}
             </div>
           </div>
         )}
 
-        {step === 2 && (
+        {/* All set */}
+        {step === 3 && (
           <div className="space-y-5 w-full">
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
@@ -131,11 +158,13 @@ export function Onboarding({ onComplete }: Props) {
               <Check size={28} className="text-accent" strokeWidth={2.5} />
             </div>
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter text-zinc-50">You're all set</h2>
+              <h2 className="text-3xl font-bold tracking-tighter text-zinc-50">
+                {firstName ? `You're all set, ${firstName}!` : "You're all set!"}
+              </h2>
               <p className="text-sm text-zinc-500 font-medium">
                 {hasValidAmount
                   ? `Your ${formatCurrency(parsedAmount)} budget for ${new Date().toLocaleString('en-PH', { month: 'long' })} is ready.`
-                  : 'Start adding your expenses whenever you\'re ready.'}
+                  : "Start adding your expenses whenever you're ready."}
               </p>
             </div>
           </div>
@@ -157,6 +186,24 @@ export function Onboarding({ onComplete }: Props) {
         {step === 1 && (
           <>
             <button
+              onClick={handleNameNext}
+              className="w-full py-4 rounded-2xl font-bold text-base text-white flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-transform"
+              style={{ background: '#818CF8', boxShadow: '0 0 24px rgba(129,140,248,0.25)' }}
+            >
+              Continue <ArrowRight size={18} />
+            </button>
+            <button
+              onClick={() => { setName(''); setStep(2) }}
+              className="w-full py-3 text-sm font-semibold text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer"
+            >
+              Skip
+            </button>
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <button
               onClick={handleBudgetNext}
               className="w-full py-4 rounded-2xl font-bold text-base text-white flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-transform"
               style={{ background: '#818CF8', boxShadow: '0 0 24px rgba(129,140,248,0.25)' }}
@@ -164,7 +211,7 @@ export function Onboarding({ onComplete }: Props) {
               {hasValidAmount ? 'Set Budget' : 'Continue'} <ArrowRight size={18} />
             </button>
             <button
-              onClick={() => { setAmount(''); setError(''); setStep(2) }}
+              onClick={() => { setAmount(''); setAmountError(''); setStep(3) }}
               className="w-full py-3 text-sm font-semibold text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer"
             >
               Skip for now
@@ -172,7 +219,7 @@ export function Onboarding({ onComplete }: Props) {
           </>
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <button
             onClick={handleComplete}
             className="w-full py-4 rounded-2xl font-bold text-base text-white flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-transform"

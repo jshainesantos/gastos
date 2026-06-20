@@ -65,3 +65,12 @@ export function hasOnboarded(): boolean {
 export function markOnboarded(): void {
   localStorage.setItem(KEYS.ONBOARDED, 'true')
 }
+
+// User name
+export function loadName(): string {
+  return localStorage.getItem('gastos_name') ?? ''
+}
+
+export function saveName(name: string): void {
+  localStorage.setItem('gastos_name', name)
+}
