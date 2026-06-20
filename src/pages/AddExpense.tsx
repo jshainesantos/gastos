@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
+import { DatePicker } from '../components/DatePicker'
 import { formatCurrency } from '../utils/formatters'
 import type { Category, Expense } from '../types'
 
@@ -152,17 +153,8 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
         {/* Date + Note row */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label htmlFor="date" className="block text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">
-              Date
-            </label>
-            <input
-              id="date"
-              type="date"
-              value={date}
-              onChange={e => setDate(e.target.value)}
-              className={inputClass + ' [color-scheme:dark]'}
-              style={inputStyle}
-            />
+            <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">Date</p>
+            <DatePicker value={date} onChange={setDate} label="Date" />
           </div>
           <div>
             <label htmlFor="note" className="block text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">

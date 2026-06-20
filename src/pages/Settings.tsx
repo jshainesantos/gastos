@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Check, Plus, X, Sun, Moon, User } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
+import { Select } from '../components/Select'
 import { formatCurrency, formatMonthYear } from '../utils/formatters'
 import { loadTheme, saveTheme, loadName, saveName, type Theme } from '../utils/storage'
 import type { Category, MonthlyBudget } from '../types'
@@ -226,16 +227,13 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
 
           {showAdd ? (
             <form onSubmit={handleAddCategoryBudget} noValidate className="space-y-3">
-              <select
+              <Select
                 value={addCategoryId}
-                onChange={e => { setAddCategoryId(e.target.value); setAddError('') }}
-                className="w-full bg-zinc-900 text-zinc-200 text-sm font-medium rounded-2xl px-4 py-3 border border-white/10 focus:outline-none focus:border-white/20 cursor-pointer"
-              >
-                <option value="">Select category…</option>
-                {availableForBudget.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
+                onChange={v => { setAddCategoryId(v); setAddError('') }}
+                options={availableForBudget.map(c => ({ value: c.id, label: c.name }))}
+                placeholder="Select category…"
+                label="Category"
+              />
 
               <div className="flex items-baseline gap-2 px-1">
                 <span className="text-base font-bold text-zinc-500">₱</span>

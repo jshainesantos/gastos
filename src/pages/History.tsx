@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Trash2, Pencil, ChevronDown } from 'lucide-react'
+import { Trash2, Pencil } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
 import { ConfirmModal } from '../components/ConfirmModal'
+import { Select } from '../components/Select'
 import { formatCurrency, formatDate, formatMonthYear, getCurrentYearMonth, toYearMonth } from '../utils/formatters'
 import type { Category, Expense } from '../types'
 
@@ -41,20 +42,12 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
 
       {/* Month picker */}
       <div className="px-5 mb-5">
-        <div className="relative">
-          <select
-            value={selectedMonth}
-            onChange={e => setSelectedMonth(e.target.value)}
-            className="w-full rounded-2xl px-4 py-3.5 text-zinc-100 focus:outline-none focus:ring-1 focus:ring-accent transition-colors appearance-none cursor-pointer text-sm font-semibold tracking-tight [color-scheme:dark]"
-            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-dim)' }}
-            aria-label="Select month"
-          >
-            {allMonths.map(m => (
-              <option key={m} value={m}>{formatMonthYear(m)}</option>
-            ))}
-          </select>
-          <ChevronDown size={15} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" aria-hidden="true" />
-        </div>
+        <Select
+          value={selectedMonth}
+          onChange={setSelectedMonth}
+          options={allMonths.map(m => ({ value: m, label: formatMonthYear(m) }))}
+          label="Month"
+        />
       </div>
 
       {/* Total hero */}
