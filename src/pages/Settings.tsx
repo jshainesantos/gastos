@@ -90,8 +90,8 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
         {/* Name */}
         <div className="rounded-3xl p-5" style={cardStyle}>
           <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">Your Name</p>
-          <form onSubmit={handleNameSave} noValidate className="flex gap-2">
-            <div className="flex items-center gap-3 flex-1 rounded-2xl px-4 py-3" style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-dim)' }}>
+          <form onSubmit={handleNameSave} noValidate className="space-y-3">
+            <div className="flex items-center gap-3 rounded-2xl px-4 py-3" style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-dim)' }}>
               <User size={15} className="text-zinc-500 flex-shrink-0" />
               <input
                 type="text"
@@ -104,7 +104,7 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
             </div>
             <button
               type="submit"
-              className="px-5 py-3 rounded-2xl font-bold text-sm text-white transition-all duration-200 cursor-pointer flex items-center gap-1.5 flex-shrink-0"
+              className="w-full py-3 rounded-2xl font-bold text-sm text-white transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5"
               style={{
                 background: nameSaved ? '#059669' : '#818CF8',
                 boxShadow: nameSaved ? '0 0 16px rgba(5,150,105,0.2)' : '0 0 16px rgba(129,140,248,0.2)',
