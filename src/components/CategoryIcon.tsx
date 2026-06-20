@@ -57,8 +57,8 @@ export function CategoryIcon({ icon, color, size = 16 }: Props) {
   const total = size + pad * 2
   return (
     <span
-      className="flex items-center justify-center rounded-2xl flex-shrink-0"
-      style={{ background: color + '18', width: total, height: total, minWidth: total }}
+      className="category-icon-bg flex items-center justify-center rounded-2xl flex-shrink-0"
+      style={{ '--icon-color': color, width: total, height: total, minWidth: total, background: color + '28' } as React.CSSProperties}
     >
       <Icon size={size} style={{ color }} strokeWidth={1.8} aria-hidden="true" />
     </span>
