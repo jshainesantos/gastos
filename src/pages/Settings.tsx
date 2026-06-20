@@ -81,6 +81,7 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
 
   const parsedAmount = parseFloat(amount)
   const hasValidAmount = amount && !isNaN(parsedAmount) && parsedAmount > 0
+  const hasChanged = parsedAmount !== currentBudget
   const usedCategoryIds = new Set(currentCategoryBudgets.map(b => b.categoryId))
   const availableForBudget = categories.filter(c => !usedCategoryIds.has(c.id))
 
@@ -183,15 +184,15 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
               )}
               <button
                 type="submit"
-                disabled={!hasValidAmount}
+                disabled={!hasValidAmount || !hasChanged}
                 className="flex-1 py-3.5 rounded-2xl font-bold text-sm text-white transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{
                   background: saved ? '#059669' : '#818CF8',
-                  boxShadow: saved ? '0 0 20px rgba(5,150,105,0.25)' : hasValidAmount ? '0 0 20px rgba(129,140,248,0.2)' : 'none',
-                  cursor: hasValidAmount ? 'pointer' : undefined,
+                  boxShadow: saved ? '0 0 20px rgba(5,150,105,0.25)' : (hasValidAmount && hasChanged) ? '0 0 20px rgba(129,140,248,0.2)' : 'none',
+                  cursor: (hasValidAmount && hasChanged) ? 'pointer' : undefined,
                 }}
               >
-                {saved ? <><Check size={16} aria-hidden="true" /> Saved!</> : 'Save Budget'}
+                {saved ? <><Check size={16} aria-hidden="true" /> Saved!</> : currentBudget > 0 ? 'Update Budget' : 'Save Budget'}
               </button>
             </div>
           </form>
