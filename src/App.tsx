@@ -6,15 +6,32 @@ import { AddExpense } from './pages/AddExpense'
 import { History } from './pages/History'
 import { Categories } from './pages/Categories'
 import { Settings } from './pages/Settings'
+import { Onboarding } from './pages/Onboarding'
 import { useStore } from './hooks/useStore'
 import { useToast } from './hooks/useToast'
+import { hasOnboarded, markOnboarded } from './utils/storage'
 import type { Expense, Page } from './types'
 
 export default function App() {
+  const [onboarded, setOnboarded] = useState(() => hasOnboarded())
   const [page, setPage] = useState<Page>('dashboard')
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   const store = useStore()
   const { toasts, toast, dismiss } = useToast()
+
+  if (!onboarded) {
+    return (
+      <div className="min-h-screen bg-canvas text-zinc-100 font-sans">
+        <Onboarding
+          onComplete={budget => {
+            if (budget) store.setBudget(store.currentYearMonth, budget)
+            markOnboarded()
+            setOnboarded(true)
+          }}
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-canvas text-zinc-100 font-sans">

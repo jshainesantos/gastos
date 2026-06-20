@@ -4,6 +4,7 @@ const KEYS = {
   CATEGORIES: 'gastos_categories',
   EXPENSES: 'gastos_expenses',
   BUDGETS: 'gastos_budgets',
+  ONBOARDED: 'gastos_onboarded',
 }
 
 export const DEFAULT_CATEGORIES: Category[] = [
@@ -54,4 +55,13 @@ export function loadBudgets(): MonthlyBudget[] {
 
 export function saveBudgets(budgets: MonthlyBudget[]): void {
   save(KEYS.BUDGETS, budgets)
+}
+
+// Onboarding
+export function hasOnboarded(): boolean {
+  return localStorage.getItem(KEYS.ONBOARDED) === 'true'
+}
+
+export function markOnboarded(): void {
+  localStorage.setItem(KEYS.ONBOARDED, 'true')
 }
