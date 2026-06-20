@@ -101,7 +101,7 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
               value={name}
               onChange={e => { setName(e.target.value); setError('') }}
               maxLength={30}
-              className="w-full rounded-2xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-accent text-sm font-medium transition-colors"
+              className="w-full rounded-2xl px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-accent text-sm font-medium transition-colors"
               style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-dim)' }}
             />
             {error && <p className="text-red-400 text-xs mt-1.5 font-medium" role="alert">{error}</p>}
@@ -118,11 +118,11 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
                   aria-pressed={icon === opt.value}
                   className="w-full aspect-square flex items-center justify-center rounded-xl transition-all cursor-pointer"
                   style={{
-                    background: icon === opt.value ? color + '18' : '#18181D',
-                    border: `1px solid ${icon === opt.value ? color + '55' : 'rgba(255,255,255,0.06)'}`,
+                    background: icon === opt.value ? color + '22' : 'var(--bg-surface-2)',
+                    border: `1px solid ${icon === opt.value ? color + '60' : 'var(--border-dim)'}`,
                   }}
                 >
-                  <CategoryIcon icon={opt.value} color={icon === opt.value ? color : '#52525B'} size={15} />
+                  <CategoryIcon icon={opt.value} color={icon === opt.value ? color : '#9F9FA8'} size={15} />
                 </button>
               ))}
             </div>
@@ -139,7 +139,7 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
                   aria-label={`Color ${c}`}
                   aria-pressed={color === c}
                   className="w-7 h-7 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-110 active:scale-95"
-                  style={{ background: c, boxShadow: color === c ? `0 0 0 2px #08080A, 0 0 0 4px ${c}` : 'none' }}
+                  style={{ background: c, boxShadow: color === c ? `0 0 0 2px var(--bg-surface), 0 0 0 4px ${c}` : 'none' }}
                 >
                   {color === c && <Check size={12} className="text-white" aria-hidden="true" strokeWidth={3} />}
                 </button>
