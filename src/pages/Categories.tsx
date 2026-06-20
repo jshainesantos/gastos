@@ -78,7 +78,7 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
           <button
             onClick={() => setShowForm(v => !v)}
             aria-label={showForm ? 'Cancel' : 'Add category'}
-            className="flex items-center gap-1.5 text-sm font-semibold tracking-tight cursor-pointer min-h-[44px] px-2 transition-colors"
+            className="flex items-center gap-1.5 text-sm font-semibold tracking-tight cursor-pointer px-2 py-1 transition-colors"
             style={{ color: showForm ? '#71717A' : '#818CF8' }}
           >
             {showForm
