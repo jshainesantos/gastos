@@ -88,7 +88,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
         left={editing && onBack ? (
           <button
             onClick={onBack}
-            className="text-sm font-semibold text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer min-h-[44px] px-2"
+            className="text-sm font-semibold text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer px-1"
           >
             ← Back
           </button>
