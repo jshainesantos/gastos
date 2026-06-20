@@ -1,4 +1,4 @@
-import { LayoutDashboard, PlusCircle, Clock, Tag, Settings } from 'lucide-react'
+import { LayoutDashboard, Plus, Clock, Tag, Settings } from 'lucide-react'
 import type { Page } from '../../types'
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 const items: { page: Page; label: string; Icon: React.ElementType }[] = [
   { page: 'dashboard', label: 'Home', Icon: LayoutDashboard },
   { page: 'history', label: 'History', Icon: Clock },
-  { page: 'add', label: 'Add', Icon: PlusCircle },
+  { page: 'add', label: 'Add', Icon: Plus },
   { page: 'categories', label: 'Tags', Icon: Tag },
   { page: 'settings', label: 'Settings', Icon: Settings },
 ]
@@ -40,8 +40,14 @@ export function BottomNav({ current, onNavigate }: Props) {
                 }`}
               >
                 {isAdd ? (
-                  <span className="w-10 h-10 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
-                    <Icon size={20} strokeWidth={2.5} aria-hidden="true" />
+                  <span
+                    className="w-14 h-14 rounded-full flex items-center justify-center -mt-7"
+                    style={{
+                      background: 'linear-gradient(145deg, #818CF8, #6366F1)',
+                      boxShadow: '0 0 0 4px var(--bg-nav), 0 8px 24px rgba(99,102,241,0.5)',
+                    }}
+                  >
+                    <Icon size={22} strokeWidth={2.5} aria-hidden="true" />
                   </span>
                 ) : (
                   <>

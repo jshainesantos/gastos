@@ -2,7 +2,7 @@ import { Settings2 } from 'lucide-react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
-import { formatCurrency, formatMonthYear } from '../utils/formatters'
+import { formatCurrency } from '../utils/formatters'
 import type { Category, Expense, MonthlyBudget } from '../types'
 
 interface Props {
@@ -20,7 +20,6 @@ interface Props {
 export function Dashboard({
   userName,
   categories,
-  currentYearMonth,
   currentMonthExpenses,
   currentMonthTotal,
   currentMonthBudget,
