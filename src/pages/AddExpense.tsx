@@ -7,18 +7,23 @@ import type { Category, Expense } from '../types'
 
 interface Props {
   categories: Category[]
+  initialExpense?: Expense
   onAdd: (expense: Expense) => void
+  onUpdate?: (id: string, updates: Partial<Omit<Expense, 'id' | 'createdAt'>>) => void
+  onBack?: () => void
 }
 
 const inputClass =
   'w-full rounded-2xl px-4 py-3.5 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-accent transition-colors text-sm font-medium'
 const inputStyle = { background: '#111115', border: '1px solid rgba(255,255,255,0.07)' }
 
-export function AddExpense({ categories, onAdd }: Props) {
-  const [amount, setAmount] = useState('')
-  const [categoryId, setCategoryId] = useState(categories[0]?.id ?? '')
-  const [note, setNote] = useState('')
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10))
+export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack }: Props) {
+  const editing = !!initialExpense
+
+  const [amount, setAmount] = useState(editing ? String(initialExpense!.amount) : '')
+  const [categoryId, setCategoryId] = useState(editing ? initialExpense!.categoryId : (categories[0]?.id ?? ''))
+  const [note, setNote] = useState(editing ? initialExpense!.note : '')
+  const [date, setDate] = useState(editing ? initialExpense!.date : () => new Date().toISOString().slice(0, 10))
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
 
@@ -47,6 +52,16 @@ export function AddExpense({ categories, onAdd }: Props) {
       return
     }
 
+    if (editing && onUpdate) {
+      onUpdate(initialExpense!.id, {
+        amount: Math.round(parsed * 100) / 100,
+        categoryId,
+        note: note.trim(),
+        date,
+      })
+      return
+    }
+
     onAdd({
       id: crypto.randomUUID(),
       amount: Math.round(parsed * 100) / 100,
@@ -68,7 +83,17 @@ export function AddExpense({ categories, onAdd }: Props) {
 
   return (
     <div className="pb-24">
-      <Header title="Add Expense" />
+      <Header
+        title={editing ? 'Edit Expense' : 'Add Expense'}
+        left={editing && onBack ? (
+          <button
+            onClick={onBack}
+            className="text-sm font-semibold text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer min-h-[44px] px-2"
+          >
+            ← Back
+          </button>
+        ) : undefined}
+      />
 
       <form onSubmit={handleSubmit} noValidate className="px-5 space-y-5">
         {/* Amount */}
@@ -110,7 +135,7 @@ export function AddExpense({ categories, onAdd }: Props) {
                   type="button"
                   onClick={() => setCategoryId(cat.id)}
                   aria-pressed={active}
-                  className={`flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-200 cursor-pointer`}
+                  className="flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-200 cursor-pointer"
                   style={{
                     background: active ? cat.color + '18' : '#111115',
                     border: `1px solid ${active ? cat.color + '55' : 'rgba(255,255,255,0.05)'}`,
@@ -159,11 +184,7 @@ export function AddExpense({ categories, onAdd }: Props) {
         {/* Submit */}
         <button
           type="submit"
-          className={`w-full py-4 rounded-2xl font-bold text-base tracking-tight transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${
-            submitted
-              ? 'text-white'
-              : 'text-white active:scale-[0.98]'
-          }`}
+          className="w-full py-4 rounded-2xl font-bold text-base tracking-tight transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-white active:scale-[0.98]"
           style={{
             background: submitted ? '#059669' : '#818CF8',
             boxShadow: submitted ? '0 0 24px rgba(5,150,105,0.3)' : '0 0 24px rgba(129,140,248,0.25)',
@@ -171,7 +192,7 @@ export function AddExpense({ categories, onAdd }: Props) {
         >
           {submitted
             ? <><Check size={18} aria-hidden="true" /> Saved!</>
-            : 'Add Expense'
+            : editing ? 'Save Changes' : 'Add Expense'
           }
         </button>
       </form>

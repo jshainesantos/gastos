@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Plus, X, Check } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
+import { ConfirmModal } from '../components/ConfirmModal'
 import type { Category } from '../types'
 
 interface Props {
@@ -47,7 +48,7 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
   const [icon, setIcon] = useState('more-horizontal')
   const [color, setColor] = useState('#818CF8')
   const [error, setError] = useState('')
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Category | null>(null)
 
   function handleAdd(e: React.FormEvent) {
     e.preventDefault()
@@ -68,10 +69,6 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
     setName(''); setIcon('more-horizontal'); setColor('#818CF8'); setError(''); setShowForm(false)
   }
 
-  function handleDelete(id: string) {
-    if (confirmDelete === id) { onDelete(id); setConfirmDelete(null) }
-    else { setConfirmDelete(id); setTimeout(() => setConfirmDelete(null), 3000) }
-  }
 
   return (
     <div className="pb-24">
@@ -173,13 +170,9 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
               ? <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-700 px-2">Default</span>
               : (
                 <button
-                  onClick={() => handleDelete(cat.id)}
-                  aria-label={confirmDelete === cat.id ? 'Confirm delete' : `Delete ${cat.name}`}
-                  className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors cursor-pointer ${
-                    confirmDelete === cat.id
-                      ? 'bg-red-500/15 text-red-400'
-                      : 'text-zinc-700 hover:text-red-400 hover:bg-red-500/10'
-                  }`}
+                  onClick={() => setDeleteTarget(cat)}
+                  aria-label={`Delete ${cat.name}`}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-700 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
                 >
                   <X size={14} aria-hidden="true" />
                 </button>
@@ -188,6 +181,16 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
           </div>
         ))}
       </div>
+
+      {deleteTarget && (
+        <ConfirmModal
+          title="Delete Category?"
+          message={`"${deleteTarget.name}" will be permanently removed.`}
+          confirmLabel="Delete"
+          onConfirm={() => { onDelete(deleteTarget.id); setDeleteTarget(null) }}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
     </div>
   )
 }
