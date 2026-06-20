@@ -112,16 +112,30 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
               {error && <p className="text-red-400 text-xs mt-1.5 font-medium" role="alert">{error}</p>}
             </div>
 
-            <button
-              type="submit"
-              className="w-full py-3.5 rounded-2xl font-bold text-sm text-white transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 active:scale-[0.98]"
-              style={{
-                background: saved ? '#059669' : '#818CF8',
-                boxShadow: saved ? '0 0 20px rgba(5,150,105,0.25)' : '0 0 20px rgba(129,140,248,0.2)',
-              }}
-            >
-              {saved ? <><Check size={16} aria-hidden="true" /> Saved!</> : 'Save Budget'}
-            </button>
+            <div className="flex gap-2">
+              {currentBudget > 0 && (
+                <button
+                  type="button"
+                  onClick={() => { onSetBudget(currentYearMonth, 0); setAmount('') }}
+                  className="py-3.5 px-5 rounded-2xl font-bold text-sm text-zinc-400 transition-colors cursor-pointer"
+                  style={{ background: 'rgba(255,255,255,0.06)' }}
+                >
+                  Remove
+                </button>
+              )}
+              <button
+                type="submit"
+                disabled={!hasValidAmount}
+                className="flex-1 py-3.5 rounded-2xl font-bold text-sm text-white transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  background: saved ? '#059669' : '#818CF8',
+                  boxShadow: saved ? '0 0 20px rgba(5,150,105,0.25)' : hasValidAmount ? '0 0 20px rgba(129,140,248,0.2)' : 'none',
+                  cursor: hasValidAmount ? 'pointer' : undefined,
+                }}
+              >
+                {saved ? <><Check size={16} aria-hidden="true" /> Saved!</> : 'Save Budget'}
+              </button>
+            </div>
           </form>
         </div>
 
