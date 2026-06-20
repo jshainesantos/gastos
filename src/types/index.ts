@@ -18,6 +18,7 @@ export interface Expense {
 export interface MonthlyBudget {
   yearMonth: string // YYYY-MM
   amount: number
+  categoryId?: string // if set, this is a per-category budget
 }
 
 export type Page = 'dashboard' | 'add' | 'history' | 'categories' | 'settings'

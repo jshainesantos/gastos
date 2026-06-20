@@ -49,19 +49,34 @@ export function useStore() {
     })
   }, [])
 
+  const updateExpense = useCallback((id: string, updates: Partial<Omit<Expense, 'id' | 'createdAt'>>) => {
+    setExpenses(prev => {
+      const next = prev.map(e => e.id === id ? { ...e, ...updates } : e)
+      saveExpenses(next)
+      return next
+    })
+  }, [])
+
   // Budgets
-  const setBudget = useCallback((yearMonth: string, amount: number) => {
+  const setBudget = useCallback((yearMonth: string, amount: number, categoryId?: string) => {
     setBudgets(prev => {
-      const next = prev.filter(b => b.yearMonth !== yearMonth)
-      if (amount > 0) next.push({ yearMonth, amount })
+      const next = prev.filter(b => !(b.yearMonth === yearMonth && b.categoryId === categoryId))
+      if (amount > 0) next.push({ yearMonth, amount, ...(categoryId ? { categoryId } : {}) })
       saveBudgets(next)
       return next
     })
   }, [])
 
   const getBudget = useCallback(
-    (yearMonth: string): number => {
-      return budgets.find(b => b.yearMonth === yearMonth)?.amount ?? 0
+    (yearMonth: string, categoryId?: string): number => {
+      return budgets.find(b => b.yearMonth === yearMonth && b.categoryId === categoryId)?.amount ?? 0
+    },
+    [budgets]
+  )
+
+  const getCategoryBudgets = useCallback(
+    (yearMonth: string): MonthlyBudget[] => {
+      return budgets.filter(b => b.yearMonth === yearMonth && !!b.categoryId)
     },
     [budgets]
   )
@@ -80,6 +95,7 @@ export function useStore() {
   const currentMonthTotal = currentMonthExpenses.reduce((sum, e) => sum + e.amount, 0)
 
   const currentMonthBudget = getBudget(currentYearMonth)
+  const currentMonthCategoryBudgets = getCategoryBudgets(currentYearMonth)
 
   // Available months that have expenses
   const availableMonths = [...new Set(expenses.map(e => toYearMonth(e.date)))].sort().reverse()
@@ -91,13 +107,16 @@ export function useStore() {
     deleteCategory,
     addExpense,
     deleteExpense,
+    updateExpense,
     setBudget,
     getBudget,
+    getCategoryBudgets,
     getExpensesForMonth,
     currentYearMonth,
     currentMonthExpenses,
     currentMonthTotal,
     currentMonthBudget,
+    currentMonthCategoryBudgets,
     availableMonths,
   }
 }
