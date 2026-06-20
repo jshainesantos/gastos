@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Trash2, ChevronDown } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { Trash2, Pencil, ChevronDown } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
+import { ConfirmModal } from '../components/ConfirmModal'
 import { formatCurrency, formatDate, formatMonthYear, getCurrentYearMonth, toYearMonth } from '../utils/formatters'
 import type { Category, Expense } from '../types'
 
@@ -11,12 +11,13 @@ interface Props {
   expenses: Expense[]
   availableMonths: string[]
   onDelete: (id: string) => void
+  onEdit: (expense: Expense) => void
 }
 
-export function History({ categories, expenses, availableMonths, onDelete }: Props) {
+export function History({ categories, expenses, availableMonths, onDelete, onEdit }: Props) {
   const allMonths = availableMonths.length > 0 ? availableMonths : [getCurrentYearMonth()]
   const [selectedMonth, setSelectedMonth] = useState(allMonths[0])
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Expense | null>(null)
 
   const monthExpenses = expenses
     .filter(e => toYearMonth(e.date) === selectedMonth)
@@ -27,23 +28,12 @@ export function History({ categories, expenses, availableMonths, onDelete }: Pro
 
   const categoryTotals = categories
     .map(cat => ({
-      name: cat.name.length > 10 ? cat.name.slice(0, 9) + '…' : cat.name,
-      fullName: cat.name,
+      ...cat,
       total: monthExpenses.filter(e => e.categoryId === cat.id).reduce((s, e) => s + e.amount, 0),
-      color: cat.color,
     }))
     .filter(c => c.total > 0)
     .sort((a, b) => b.total - a.total)
 
-  function handleDelete(id: string) {
-    if (confirmDelete === id) {
-      onDelete(id)
-      setConfirmDelete(null)
-    } else {
-      setConfirmDelete(id)
-      setTimeout(() => setConfirmDelete(null), 3000)
-    }
-  }
 
   return (
     <div className="pb-24">
@@ -81,7 +71,7 @@ export function History({ categories, expenses, availableMonths, onDelete }: Pro
         </div>
       </div>
 
-      {/* Bar chart */}
+      {/* By Category */}
       {categoryTotals.length > 0 && (
         <div className="px-5 mb-5">
           <div
@@ -89,34 +79,20 @@ export function History({ categories, expenses, availableMonths, onDelete }: Pro
             style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
           >
             <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">By Category</p>
-            <ResponsiveContainer width="100%" height={categoryTotals.length * 34 + 8}>
-              <BarChart
-                data={categoryTotals}
-                layout="vertical"
-                margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
-                barSize={10}
-              >
-                <XAxis type="number" hide />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={80}
-                  tick={{ fill: '#71717A', fontSize: 11, fontFamily: 'Inter', fontWeight: 500 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(v: number) => formatCurrency(v)}
-                  contentStyle={{ background: '#18181D', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, color: '#f4f4f5', fontSize: 12 }}
-                  cursor={{ fill: 'rgba(255,255,255,0.03)' }}
-                />
-                <Bar dataKey="total" radius={[0, 8, 8, 0]}>
-                  {categoryTotals.map((entry, i) => (
-                    <Cell key={i} fill={entry.color} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="space-y-3">
+              {categoryTotals.map(cat => (
+                <div key={cat.id} className="flex items-center gap-3">
+                  <CategoryIcon icon={cat.icon} color={cat.color} size={14} />
+                  <span className="flex-1 text-sm font-medium text-zinc-300 truncate">{cat.name}</span>
+                  <span className="text-xs font-medium text-zinc-500 tabular-nums">
+                    {total > 0 ? Math.round((cat.total / total) * 100) : 0}%
+                  </span>
+                  <span className="text-sm font-bold text-zinc-100 tabular-nums tracking-tight w-24 text-right">
+                    {formatCurrency(cat.total)}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -148,18 +124,21 @@ export function History({ categories, expenses, availableMonths, onDelete }: Pro
                     </p>
                     <p className="text-xs text-zinc-500 mt-0.5">{formatDate(expense.date)}</p>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <p className="text-sm font-bold text-zinc-100 tabular-nums">{formatCurrency(expense.amount)}</p>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <p className="text-sm font-bold text-zinc-100 tabular-nums mr-1">{formatCurrency(expense.amount)}</p>
                     <button
-                      onClick={() => handleDelete(expense.id)}
-                      aria-label={confirmDelete === expense.id ? 'Confirm delete' : 'Delete'}
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors cursor-pointer ${
-                        confirmDelete === expense.id
-                          ? 'bg-red-500/15 text-red-400'
-                          : 'text-zinc-700 hover:text-red-400 hover:bg-red-500/10'
-                      }`}
+                      onClick={() => onEdit(expense)}
+                      aria-label="Edit expense"
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-600 hover:text-accent hover:bg-white/5 transition-colors cursor-pointer"
                     >
-                      <Trash2 size={14} aria-hidden="true" />
+                      <Pencil size={13} aria-hidden="true" />
+                    </button>
+                    <button
+                      onClick={() => setDeleteTarget(expense)}
+                      aria-label="Delete expense"
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                    >
+                      <Trash2 size={13} aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -168,6 +147,17 @@ export function History({ categories, expenses, availableMonths, onDelete }: Pro
           </div>
         )}
       </div>
+
+      {deleteTarget && (
+        <ConfirmModal
+          title="Delete Expense?"
+          message={`"${deleteTarget.note || getCategoryById(deleteTarget.categoryId)?.name || 'Expense'}" — ${formatCurrency(deleteTarget.amount)}`}
+          confirmLabel="Delete"
+          onConfirm={() => { onDelete(deleteTarget.id); setDeleteTarget(null) }}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+
     </div>
   )
 }

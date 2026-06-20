@@ -8,10 +8,11 @@ import { Categories } from './pages/Categories'
 import { Settings } from './pages/Settings'
 import { useStore } from './hooks/useStore'
 import { useToast } from './hooks/useToast'
-import type { Page } from './types'
+import type { Expense, Page } from './types'
 
 export default function App() {
   const [page, setPage] = useState<Page>('dashboard')
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   const store = useStore()
   const { toasts, toast, dismiss } = useToast()
 
@@ -25,6 +26,7 @@ export default function App() {
             currentMonthExpenses={store.currentMonthExpenses}
             currentMonthTotal={store.currentMonthTotal}
             currentMonthBudget={store.currentMonthBudget}
+            currentMonthCategoryBudgets={store.currentMonthCategoryBudgets}
             onNavigateAdd={() => setPage('add')}
             onNavigateSettings={() => setPage('settings')}
           />
@@ -32,7 +34,15 @@ export default function App() {
         {page === 'add' && (
           <AddExpense
             categories={store.categories}
+            initialExpense={editingExpense ?? undefined}
             onAdd={expense => { store.addExpense(expense); toast('Expense added!') }}
+            onUpdate={(id, updates) => {
+              store.updateExpense(id, updates)
+              toast('Expense updated!')
+              setEditingExpense(null)
+              setPage('history')
+            }}
+            onBack={() => { setEditingExpense(null); setPage('history') }}
           />
         )}
         {page === 'history' && (
@@ -41,6 +51,7 @@ export default function App() {
             expenses={store.expenses}
             availableMonths={store.availableMonths}
             onDelete={id => { store.deleteExpense(id); toast('Expense deleted.', 'warning') }}
+            onEdit={expense => { setEditingExpense(expense); setPage('add') }}
           />
         )}
         {page === 'categories' && (
@@ -56,18 +67,24 @@ export default function App() {
         )}
         {page === 'settings' && (
           <Settings
+            categories={store.categories}
             currentYearMonth={store.currentYearMonth}
             currentBudget={store.currentMonthBudget}
-            onSetBudget={(ym, amount) => {
-              store.setBudget(ym, amount)
-              toast(amount > 0 ? 'Budget saved!' : 'Budget cleared.')
+            currentCategoryBudgets={store.currentMonthCategoryBudgets}
+            onSetBudget={(ym, amount, categoryId) => {
+              store.setBudget(ym, amount, categoryId)
+              if (categoryId) {
+                toast(amount > 0 ? 'Category budget saved!' : 'Category budget removed.')
+              } else {
+                toast(amount > 0 ? 'Budget saved!' : 'Budget cleared.')
+              }
             }}
           />
         )}
       </main>
 
       <Toaster toasts={toasts} onDismiss={dismiss} />
-      <BottomNav current={page} onNavigate={setPage} />
+      <BottomNav current={page} onNavigate={p => { setEditingExpense(null); setPage(p) }} />
     </div>
   )
 }
