@@ -74,8 +74,8 @@ export function Dashboard({
             <div className="w-48 h-24 rounded-full opacity-10" style={{ background: '#818CF8', filter: 'blur(40px)' }} />
           </div>
 
-          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">Total Spent</p>
-          <p className="text-5xl font-bold tracking-tighter text-zinc-50 mb-1 leading-none">
+          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2 text-center">Total Spent</p>
+          <p className="text-5xl font-bold tracking-tighter text-zinc-50 mb-1 leading-none text-center">
             {formatCurrency(currentMonthTotal)}
           </p>
 
@@ -104,7 +104,7 @@ export function Dashboard({
           ) : (
             <button
               onClick={onNavigateSettings}
-              className="mt-4 text-xs font-medium text-zinc-500 hover:text-accent transition-colors cursor-pointer"
+              className="mt-4 text-xs font-medium text-zinc-500 hover:text-accent transition-colors cursor-pointer w-full text-center"
             >
               Set a monthly budget →
             </button>
