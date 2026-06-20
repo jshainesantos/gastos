@@ -6,6 +6,7 @@ import { formatCurrency, formatMonthYear } from '../utils/formatters'
 import type { Category, Expense, MonthlyBudget } from '../types'
 
 interface Props {
+  userName: string
   categories: Category[]
   currentYearMonth: string
   currentMonthExpenses: Expense[]
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function Dashboard({
+  userName,
   categories,
   currentYearMonth,
   currentMonthExpenses,
@@ -43,11 +45,15 @@ export function Dashboard({
   const barColor =
     budgetUsedPct >= 100 ? '#F87171' : budgetUsedPct >= 80 ? '#FBBF24' : '#818CF8'
 
+  const hour = new Date().getHours()
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
+
+
   return (
     <div className="pb-24">
       <Header
-        title="Gastos"
-        subtitle={formatMonthYear(currentYearMonth)}
+        title={userName ? `${greeting}, ${userName.split(' ')[0]}` : greeting}
+        subtitle={new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric' })}
         right={
           <button
             onClick={onNavigateSettings}

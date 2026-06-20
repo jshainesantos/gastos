@@ -9,11 +9,12 @@ import { Settings } from './pages/Settings'
 import { Onboarding } from './pages/Onboarding'
 import { useStore } from './hooks/useStore'
 import { useToast } from './hooks/useToast'
-import { hasOnboarded, markOnboarded } from './utils/storage'
+import { hasOnboarded, markOnboarded, loadName, saveName } from './utils/storage'
 import type { Expense, Page } from './types'
 
 export default function App() {
   const [onboarded, setOnboarded] = useState(() => hasOnboarded())
+  const [userName, setUserName] = useState(() => loadName())
   const [page, setPage] = useState<Page>('dashboard')
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   const store = useStore()
@@ -23,7 +24,8 @@ export default function App() {
     return (
       <div className="min-h-screen bg-canvas text-zinc-100 font-sans">
         <Onboarding
-          onComplete={budget => {
+          onComplete={(name, budget) => {
+            if (name) { saveName(name); setUserName(name) }
             if (budget) store.setBudget(store.currentYearMonth, budget)
             markOnboarded()
             setOnboarded(true)
@@ -38,6 +40,7 @@ export default function App() {
       <main className="max-w-[430px] mx-auto" id="main-content">
         {page === 'dashboard' && (
           <Dashboard
+            userName={userName}
             categories={store.categories}
             currentYearMonth={store.currentYearMonth}
             currentMonthExpenses={store.currentMonthExpenses}
