@@ -214,22 +214,6 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
           )}
         </div>
 
-        {/* About */}
-        <div className="rounded-3xl p-5" style={cardStyle}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">About</p>
-          <div className="space-y-3">
-            {[
-              ['App', 'Gastos'],
-              ['Version', '1.0.0'],
-              ['Storage', 'Local only'],
-            ].map(([label, value]) => (
-              <div key={label} className="flex items-center justify-between">
-                <span className="text-sm text-zinc-500">{label}</span>
-                <span className="text-sm font-semibold text-zinc-200 tracking-tight">{value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   )
