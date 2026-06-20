@@ -76,7 +76,7 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
               {categoryTotals.map(cat => (
                 <div key={cat.id} className="flex items-center gap-3">
                   <CategoryIcon icon={cat.icon} color={cat.color} size={14} />
-                  <span className="flex-1 text-sm font-medium text-zinc-300 truncate">{cat.name}</span>
+                  <span className="flex-1 text-sm font-medium text-zinc-100 truncate">{cat.name}</span>
                   <span className="text-xs font-medium text-zinc-500 tabular-nums">
                     {total > 0 ? Math.round((cat.total / total) * 100) : 0}%
                   </span>

@@ -213,8 +213,8 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
                 return (
                   <div key={b.categoryId} className="flex items-center gap-3">
                     <CategoryIcon icon={cat.icon} color={cat.color} size={14} />
-                    <span className="flex-1 text-sm font-medium text-zinc-300 truncate">{cat.name}</span>
-                    <span className="text-sm font-bold text-zinc-200 tabular-nums">{formatCurrency(b.amount)}</span>
+                    <span className="flex-1 text-sm font-medium text-zinc-100 truncate">{cat.name}</span>
+                    <span className="text-sm font-bold text-zinc-100 tabular-nums">{formatCurrency(b.amount)}</span>
                     <button
                       onClick={() => onSetBudget(currentYearMonth, 0, b.categoryId)}
                       aria-label={`Remove ${cat.name} budget`}
