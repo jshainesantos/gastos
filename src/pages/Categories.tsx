@@ -40,7 +40,7 @@ const COLOR_OPTIONS = [
   '#EAB308', '#EC4899', '#F59E0B', '#6B7280',
 ]
 
-const cardStyle = { background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }
+const cardStyle = { background: 'var(--bg-surface)', border: '1px solid var(--border)' }
 
 export function Categories({ categories, onAdd, onDelete }: Props) {
   const [showForm, setShowForm] = useState(false)
@@ -102,7 +102,7 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
               onChange={e => { setName(e.target.value); setError('') }}
               maxLength={30}
               className="w-full rounded-2xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-accent text-sm font-medium transition-colors"
-              style={{ background: '#18181D', border: '1px solid rgba(255,255,255,0.07)' }}
+              style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-dim)' }}
             />
             {error && <p className="text-red-400 text-xs mt-1.5 font-medium" role="alert">{error}</p>}
           </div>

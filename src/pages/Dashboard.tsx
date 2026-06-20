@@ -69,7 +69,7 @@ export function Dashboard({
       <div className="px-5 mb-5">
         <div
           className="rounded-3xl p-6 relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #1a1a22 0%, #111115 100%)', border: '1px solid rgba(255,255,255,0.06)' }}
+          style={{ background: 'var(--bg-hero)', border: '1px solid var(--border-dim)' }}
         >
           {/* Subtle glow behind number */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
@@ -119,7 +119,7 @@ export function Dashboard({
         <div className="px-5 mb-5">
           <div
             className="rounded-3xl p-5"
-            style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
           >
             <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">Breakdown</p>
 
@@ -143,7 +143,7 @@ export function Dashboard({
                     </Pie>
                     <Tooltip
                       formatter={(v: number) => formatCurrency(v)}
-                      contentStyle={{ background: '#18181D', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, color: '#f4f4f5', fontSize: 12 }}
+                      contentStyle={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-md)', borderRadius: 12, color: '#f4f4f5', fontSize: 12 }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
@@ -198,7 +198,7 @@ export function Dashboard({
         {recentExpenses.length === 0 ? (
           <div
             className="rounded-3xl p-10 text-center"
-            style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
           >
             <p className="text-zinc-500 text-sm">No expenses yet this month.</p>
             <button
@@ -216,7 +216,7 @@ export function Dashboard({
                 <div
                   key={expense.id}
                   className="flex items-center gap-3 px-4 py-3.5 rounded-2xl"
-                  style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+                  style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
                 >
                   {cat && <CategoryIcon icon={cat.icon} color={cat.color} size={15} />}
                   <div className="flex-1 min-w-0">

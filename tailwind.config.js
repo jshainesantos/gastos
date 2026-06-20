@@ -7,11 +7,10 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        canvas: '#08080A',
+        canvas: 'var(--bg-canvas)',
         surface: {
-          DEFAULT: '#111115',
-          2: '#18181D',
-          3: '#222228',
+          DEFAULT: 'var(--bg-surface)',
+          2: 'var(--bg-surface-2)',
         },
         accent: '#818CF8',
         'accent-hover': '#6366F1',

@@ -124,7 +124,7 @@ export function Onboarding({ onComplete }: Props) {
             </div>
             <div
               className="rounded-3xl p-5 text-left"
-              style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
             >
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-zinc-500">₱</span>

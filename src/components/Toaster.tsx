@@ -36,7 +36,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
       aria-live="polite"
       className="flex items-center gap-3 px-4 py-3.5 rounded-2xl w-full max-w-sm mx-auto shadow-xl animate-toast-in"
       style={{
-        background: '#18181D',
+        background: 'var(--bg-surface-2)',
         border: `1px solid ${color}33`,
         backdropFilter: 'blur(12px)',
       }}

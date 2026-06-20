@@ -10,12 +10,12 @@ export function ConfirmModal({ title, message, confirmLabel = 'Delete', onConfir
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center p-4 pb-8"
-      style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+      style={{ background: 'var(--overlay)', backdropFilter: 'blur(4px)' }}
       onClick={onCancel}
     >
       <div
         className="w-full max-w-[430px] rounded-3xl p-5 space-y-4"
-        style={{ background: '#18181D', border: '1px solid rgba(255,255,255,0.08)' }}
+        style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-md)' }}
         onClick={e => e.stopPropagation()}
       >
         <div>
@@ -26,7 +26,7 @@ export function ConfirmModal({ title, message, confirmLabel = 'Delete', onConfir
           <button
             onClick={onCancel}
             className="flex-1 py-3.5 rounded-2xl font-bold text-sm text-zinc-400 transition-colors cursor-pointer"
-            style={{ background: 'rgba(255,255,255,0.06)' }}
+            style={{ background: 'var(--border-dim)' }}
           >
             Cancel
           </button>

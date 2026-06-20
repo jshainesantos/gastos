@@ -46,7 +46,7 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
             value={selectedMonth}
             onChange={e => setSelectedMonth(e.target.value)}
             className="w-full rounded-2xl px-4 py-3.5 text-zinc-100 focus:outline-none focus:ring-1 focus:ring-accent transition-colors appearance-none cursor-pointer text-sm font-semibold tracking-tight [color-scheme:dark]"
-            style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.07)' }}
+            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-dim)' }}
             aria-label="Select month"
           >
             {allMonths.map(m => (
@@ -61,7 +61,7 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
       <div className="px-5 mb-5">
         <div
           className="rounded-3xl px-5 py-5"
-          style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
         >
           <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-1">
             {formatMonthYear(selectedMonth)}
@@ -76,7 +76,7 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
         <div className="px-5 mb-5">
           <div
             className="rounded-3xl p-5"
-            style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
           >
             <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">By Category</p>
             <div className="space-y-3">
@@ -103,7 +103,7 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
         {monthExpenses.length === 0 ? (
           <div
             className="rounded-3xl p-10 text-center"
-            style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
           >
             <p className="text-zinc-500 text-sm">No expenses for this month.</p>
           </div>
@@ -115,7 +115,7 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
                 <div
                   key={expense.id}
                   className="flex items-center gap-3 px-4 py-3.5 rounded-2xl"
-                  style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+                  style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
                 >
                   {cat && <CategoryIcon icon={cat.icon} color={cat.color} size={15} />}
                   <div className="flex-1 min-w-0">

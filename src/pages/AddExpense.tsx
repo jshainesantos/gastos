@@ -15,7 +15,7 @@ interface Props {
 
 const inputClass =
   'w-full rounded-2xl px-4 py-3.5 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-accent transition-colors text-sm font-medium'
-const inputStyle = { background: '#111115', border: '1px solid rgba(255,255,255,0.07)' }
+const inputStyle = { background: 'var(--bg-surface)', border: '1px solid var(--border-dim)' }
 
 export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack }: Props) {
   const editing = !!initialExpense
@@ -99,7 +99,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
         {/* Amount */}
         <div
           className="rounded-3xl p-5"
-          style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }}
+          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
         >
           <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-3">Amount</p>
           <div className="flex items-baseline gap-2">

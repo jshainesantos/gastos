@@ -18,7 +18,7 @@ export function BottomNav({ current, onNavigate }: Props) {
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 z-30"
-      style={{ background: 'rgba(11,11,14,0.92)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}
+      style={{ background: 'var(--bg-nav)', backdropFilter: 'blur(20px)', borderTop: '1px solid var(--border-dim)' }}
       aria-label="Main navigation"
     >
       <ul className="flex items-center justify-around h-[68px] max-w-[430px] mx-auto px-2">
