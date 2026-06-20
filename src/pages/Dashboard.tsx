@@ -8,7 +8,6 @@ import type { Category, Expense, MonthlyBudget } from '../types'
 interface Props {
   userName: string
   categories: Category[]
-  currentYearMonth: string
   currentMonthExpenses: Expense[]
   currentMonthTotal: number
   currentMonthBudget: number

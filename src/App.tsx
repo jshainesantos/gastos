@@ -46,7 +46,6 @@ export default function App() {
           <Dashboard
             userName={userName}
             categories={store.categories}
-            currentYearMonth={store.currentYearMonth}
             currentMonthExpenses={store.currentMonthExpenses}
             currentMonthTotal={store.currentMonthTotal}
             currentMonthBudget={store.currentMonthBudget}
