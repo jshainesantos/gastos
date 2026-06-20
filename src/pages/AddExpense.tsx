@@ -138,7 +138,8 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
                   aria-pressed={active}
                   className="flex items-center gap-2.5 px-3.5 py-3 rounded-2xl transition-all duration-200 cursor-pointer"
                   style={{
-                    background: active ? cat.color + '22' : 'rgba(255,255,255,0.05)',
+                    background: active ? cat.color + '22' : 'var(--chip-bg)',
+                    border: `1px solid ${active ? cat.color + '55' : 'var(--border-dim)'}`,
                   }}
                 >
                   <CategoryIcon icon={cat.icon} color={cat.color} size={16} />
