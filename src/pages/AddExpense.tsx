@@ -127,7 +127,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
         {/* Category */}
         <div>
           <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-3">Category</p>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {categories.map(cat => {
               const active = categoryId === cat.id
               return (
@@ -136,14 +136,16 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
                   type="button"
                   onClick={() => setCategoryId(cat.id)}
                   aria-pressed={active}
-                  className="flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-200 cursor-pointer"
+                  className="flex items-center gap-2.5 px-3.5 py-3 rounded-2xl transition-all duration-200 cursor-pointer"
                   style={{
-                    background: active ? cat.color + '18' : '#111115',
-                    border: `1px solid ${active ? cat.color + '55' : 'rgba(255,255,255,0.05)'}`,
+                    background: active ? cat.color + '22' : 'rgba(255,255,255,0.05)',
                   }}
                 >
-                  <CategoryIcon icon={cat.icon} color={cat.color} size={15} />
-                  <span className="text-[10px] font-medium text-zinc-400 text-center leading-tight line-clamp-2">{cat.name}</span>
+                  <CategoryIcon icon={cat.icon} color={cat.color} size={16} />
+                  <span
+                    className="text-xs font-semibold truncate"
+                    style={{ color: active ? cat.color : '#71717a' }}
+                  >{cat.name}</span>
                 </button>
               )
             })}

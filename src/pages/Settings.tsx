@@ -32,8 +32,10 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
   const [theme, setTheme] = useState<Theme>(() => loadTheme())
 
   // Name
+  const [savedName] = useState(() => loadName())
   const [name, setName] = useState(() => loadName())
   const [nameSaved, setNameSaved] = useState(false)
+  const nameChanged = name.trim() !== savedName.trim()
 
   function handleSave(e: React.FormEvent) {
     e.preventDefault()
@@ -105,13 +107,14 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
             </div>
             <button
               type="submit"
-              className="w-full py-3 rounded-2xl font-bold text-sm text-white transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5"
+              disabled={!nameChanged && !nameSaved}
+              className="w-full py-3 rounded-2xl font-bold text-sm text-white transition-all duration-200 flex items-center justify-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               style={{
                 background: nameSaved ? '#059669' : '#818CF8',
-                boxShadow: nameSaved ? '0 0 16px rgba(5,150,105,0.2)' : '0 0 16px rgba(129,140,248,0.2)',
+                boxShadow: nameSaved ? '0 0 16px rgba(5,150,105,0.2)' : nameChanged ? '0 0 16px rgba(129,140,248,0.2)' : 'none',
               }}
             >
-              {nameSaved ? <><Check size={14} /> Saved</> : 'Save'}
+              {nameSaved ? <><Check size={14} /> Updated</> : savedName ? 'Update' : 'Save'}
             </button>
           </form>
         </div>
