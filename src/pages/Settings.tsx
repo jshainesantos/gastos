@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Check, Plus, X } from 'lucide-react'
+import { Check, Plus, X, Sun, Moon, User } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
 import { formatCurrency, formatMonthYear } from '../utils/formatters'
+import { loadTheme, saveTheme, loadName, saveName, type Theme } from '../utils/storage'
 import type { Category, MonthlyBudget } from '../types'
 
 interface Props {
@@ -11,24 +12,30 @@ interface Props {
   currentBudget: number
   currentCategoryBudgets: MonthlyBudget[]
   onSetBudget: (yearMonth: string, amount: number, categoryId?: string) => void
+  onNameChange: (name: string) => void
 }
 
-const cardStyle = { background: '#111115', border: '1px solid rgba(255,255,255,0.05)' }
+const cardStyle = { background: 'var(--bg-surface)', border: '1px solid var(--border)' }
 
-export function Settings({ categories, currentYearMonth, currentBudget, currentCategoryBudgets, onSetBudget }: Props) {
+export function Settings({ categories, currentYearMonth, currentBudget, currentCategoryBudgets, onSetBudget, onNameChange }: Props) {
+  // Budget
   const [amount, setAmount] = useState(currentBudget > 0 ? String(currentBudget) : '')
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
-
-  // Category budget add form
   const [showAdd, setShowAdd] = useState(false)
   const [addCategoryId, setAddCategoryId] = useState('')
   const [addAmount, setAddAmount] = useState('')
   const [addError, setAddError] = useState('')
 
+  // Theme
+  const [theme, setTheme] = useState<Theme>(() => loadTheme())
+
+  // Name
+  const [name, setName] = useState(() => loadName())
+  const [nameSaved, setNameSaved] = useState(false)
+
   function handleSave(e: React.FormEvent) {
     e.preventDefault()
-    // Empty = clear the budget
     if (!amount.trim()) {
       onSetBudget(currentYearMonth, 0)
       setSaved(true)
@@ -36,14 +43,8 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
       return
     }
     const parsed = parseFloat(amount)
-    if (isNaN(parsed) || parsed < 0) {
-      setError('Please enter a valid number.')
-      return
-    }
-    if (parsed > 10_000_000) {
-      setError('Budget seems too large. Please double-check.')
-      return
-    }
+    if (isNaN(parsed) || parsed < 0) { setError('Please enter a valid number.'); return }
+    if (parsed > 10_000_000) { setError('Budget seems too large. Please double-check.'); return }
     onSetBudget(currentYearMonth, parsed)
     setSaved(true)
     setError('')
@@ -52,30 +53,31 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
 
   function handleAddCategoryBudget(e: React.FormEvent) {
     e.preventDefault()
-    if (!addCategoryId) {
-      setAddError('Please select a category.')
-      return
-    }
+    if (!addCategoryId) { setAddError('Please select a category.'); return }
     const parsed = parseFloat(addAmount)
-    if (!addAmount.trim() || isNaN(parsed) || parsed <= 0) {
-      setAddError('Please enter a valid amount.')
-      return
-    }
-    if (parsed > 10_000_000) {
-      setAddError('Budget seems too large.')
-      return
-    }
+    if (!addAmount.trim() || isNaN(parsed) || parsed <= 0) { setAddError('Please enter a valid amount.'); return }
+    if (parsed > 10_000_000) { setAddError('Budget seems too large.'); return }
     onSetBudget(currentYearMonth, parsed, addCategoryId)
-    setShowAdd(false)
-    setAddCategoryId('')
-    setAddAmount('')
-    setAddError('')
+    setShowAdd(false); setAddCategoryId(''); setAddAmount(''); setAddError('')
+  }
+
+  function handleThemeToggle() {
+    const next: Theme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(next)
+    saveTheme(next)
+  }
+
+  function handleNameSave(e: React.FormEvent) {
+    e.preventDefault()
+    const trimmed = name.trim()
+    saveName(trimmed)
+    onNameChange(trimmed)
+    setNameSaved(true)
+    setTimeout(() => setNameSaved(false), 2000)
   }
 
   const parsedAmount = parseFloat(amount)
   const hasValidAmount = amount && !isNaN(parsedAmount) && parsedAmount > 0
-
-  // Categories that don't already have a budget set
   const usedCategoryIds = new Set(currentCategoryBudgets.map(b => b.categoryId))
   const availableForBudget = categories.filter(c => !usedCategoryIds.has(c.id))
 
@@ -84,6 +86,58 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
       <Header title="Settings" />
 
       <div className="px-5 space-y-4">
+
+        {/* Name */}
+        <div className="rounded-3xl p-5" style={cardStyle}>
+          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">Your Name</p>
+          <form onSubmit={handleNameSave} noValidate className="flex gap-2">
+            <div className="flex items-center gap-3 flex-1 rounded-2xl px-4 py-3" style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-dim)' }}>
+              <User size={15} className="text-zinc-500 flex-shrink-0" />
+              <input
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                maxLength={40}
+                className="flex-1 bg-transparent text-sm font-medium text-zinc-100 placeholder:text-zinc-600 focus:outline-none"
+              />
+            </div>
+            <button
+              type="submit"
+              className="px-5 py-3 rounded-2xl font-bold text-sm text-white transition-all duration-200 cursor-pointer flex items-center gap-1.5 flex-shrink-0"
+              style={{
+                background: nameSaved ? '#059669' : '#818CF8',
+                boxShadow: nameSaved ? '0 0 16px rgba(5,150,105,0.2)' : '0 0 16px rgba(129,140,248,0.2)',
+              }}
+            >
+              {nameSaved ? <><Check size={14} /> Saved</> : 'Save'}
+            </button>
+          </form>
+        </div>
+
+        {/* Theme */}
+        <div className="rounded-3xl p-5" style={cardStyle}>
+          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">Appearance</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {theme === 'dark' ? <Moon size={16} className="text-zinc-400" /> : <Sun size={16} className="text-zinc-400" />}
+              <span className="text-sm font-medium text-zinc-200">{theme === 'dark' ? 'Dark mode' : 'Light mode'}</span>
+            </div>
+            <button
+              onClick={handleThemeToggle}
+              role="switch"
+              aria-checked={theme === 'light'}
+              className="relative w-12 h-6 rounded-full transition-colors duration-200 cursor-pointer flex-shrink-0"
+              style={{ background: theme === 'light' ? '#818CF8' : 'var(--bg-surface-2)' }}
+            >
+              <span
+                className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-200"
+                style={{ left: theme === 'light' ? '26px' : '2px' }}
+              />
+            </button>
+          </div>
+        </div>
+
         {/* Overall Budget */}
         <div className="rounded-3xl p-5" style={cardStyle}>
           <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-1">Monthly Budget</p>
@@ -118,7 +172,7 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
                   type="button"
                   onClick={() => { onSetBudget(currentYearMonth, 0); setAmount('') }}
                   className="py-3.5 px-5 rounded-2xl font-bold text-sm text-zinc-400 transition-colors cursor-pointer"
-                  style={{ background: 'rgba(255,255,255,0.06)' }}
+                  style={{ background: 'var(--border-dim)' }}
                 >
                   Remove
                 </button>

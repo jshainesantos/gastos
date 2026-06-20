@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BottomNav } from './components/layout/BottomNav'
 import { Toaster } from './components/Toaster'
 import { Dashboard } from './pages/Dashboard'
@@ -9,12 +9,16 @@ import { Settings } from './pages/Settings'
 import { Onboarding } from './pages/Onboarding'
 import { useStore } from './hooks/useStore'
 import { useToast } from './hooks/useToast'
-import { hasOnboarded, markOnboarded, loadName, saveName } from './utils/storage'
+import { hasOnboarded, markOnboarded, loadName, saveName, applyTheme } from './utils/storage'
 import type { Expense, Page } from './types'
 
 export default function App() {
   const [onboarded, setOnboarded] = useState(() => hasOnboarded())
   const [userName, setUserName] = useState(() => loadName())
+
+  useEffect(() => {
+    applyTheme()
+  }, [])
   const [page, setPage] = useState<Page>('dashboard')
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   const store = useStore()
@@ -99,6 +103,7 @@ export default function App() {
                 toast(amount > 0 ? 'Budget saved!' : 'Budget cleared.')
               }
             }}
+            onNameChange={n => setUserName(n)}
           />
         )}
       </main>

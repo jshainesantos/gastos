@@ -5,6 +5,8 @@ const KEYS = {
   EXPENSES: 'gastos_expenses',
   BUDGETS: 'gastos_budgets',
   ONBOARDED: 'gastos_onboarded',
+  NAME: 'gastos_name',
+  THEME: 'gastos_theme',
 }
 
 export const DEFAULT_CATEGORIES: Category[] = [
@@ -68,9 +70,26 @@ export function markOnboarded(): void {
 
 // User name
 export function loadName(): string {
-  return localStorage.getItem('gastos_name') ?? ''
+  return localStorage.getItem(KEYS.NAME) ?? ''
 }
 
 export function saveName(name: string): void {
-  localStorage.setItem('gastos_name', name)
+  localStorage.setItem(KEYS.NAME, name)
 }
+
+// Theme
+export type Theme = 'dark' | 'light'
+
+export function loadTheme(): Theme {
+  return (localStorage.getItem(KEYS.THEME) as Theme) ?? 'dark'
+}
+
+export function saveTheme(theme: Theme): void {
+  localStorage.setItem(KEYS.THEME, theme)
+  document.documentElement.setAttribute('data-theme', theme)
+}
+
+export function applyTheme(): void {
+  document.documentElement.setAttribute('data-theme', loadTheme())
+}
+
