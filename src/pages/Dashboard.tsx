@@ -37,7 +37,6 @@ export function Dashboard({
     .filter(c => c.total > 0)
     .sort((a, b) => b.total - a.total)
 
-  const topCategory = categoryTotals[0]
   const recentExpenses = currentMonthExpenses.slice(0, 5)
   const getCategoryById = (id: string) => categories.find(c => c.id === id)
 
@@ -182,19 +181,6 @@ export function Dashboard({
               </div>
             </div>
 
-            {topCategory && (
-              <div
-                className="mt-4 pt-4 flex items-center gap-3"
-                style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
-              >
-                <CategoryIcon icon={topCategory.icon} color={topCategory.color} size={15} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-widest">Biggest spend</p>
-                  <p className="text-sm font-semibold text-zinc-100 mt-0.5 tracking-tight">{topCategory.name}</p>
-                </div>
-                <p className="text-sm font-bold text-zinc-100 tabular-nums">{formatCurrency(topCategory.total)}</p>
-              </div>
-            )}
           </div>
         </div>
       )}
