@@ -3,7 +3,7 @@ import { Trash2, Pencil } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
 import { ConfirmModal } from '../components/ConfirmModal'
-import { Select } from '../components/Select'
+import { MultiSelect } from '../components/MultiSelect'
 import { formatCurrency, formatDate, formatMonthYear, getCurrentYearMonth, toYearMonth } from '../utils/formatters'
 import type { Category, Expense } from '../types'
 
@@ -17,11 +17,11 @@ interface Props {
 
 export function History({ categories, expenses, availableMonths, onDelete, onEdit }: Props) {
   const allMonths = availableMonths.length > 0 ? availableMonths : [getCurrentYearMonth()]
-  const [selectedMonth, setSelectedMonth] = useState(allMonths[0])
+  const [selectedMonths, setSelectedMonths] = useState([allMonths[0]])
   const [deleteTarget, setDeleteTarget] = useState<Expense | null>(null)
 
   const monthExpenses = expenses
-    .filter(e => toYearMonth(e.date) === selectedMonth)
+    .filter(e => selectedMonths.includes(toYearMonth(e.date)))
     .sort((a, b) => b.date.localeCompare(a.date))
 
   const total = monthExpenses.reduce((sum, e) => sum + e.amount, 0)
@@ -35,6 +35,11 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
     .filter(c => c.total > 0)
     .sort((a, b) => b.total - a.total)
 
+  const heroLabel =
+    selectedMonths.length === 1
+      ? formatMonthYear(selectedMonths[0])
+      : `${selectedMonths.length} months`
+
 
   return (
     <div className="pb-24">
@@ -42,11 +47,11 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
 
       {/* Month picker */}
       <div className="px-5 mb-5">
-        <Select
-          value={selectedMonth}
-          onChange={setSelectedMonth}
+        <MultiSelect
+          values={selectedMonths}
+          onChange={setSelectedMonths}
           options={allMonths.map(m => ({ value: m, label: formatMonthYear(m) }))}
-          label="Month"
+          label="Months"
         />
       </div>
 
@@ -57,7 +62,7 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
           style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
         >
           <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-1 text-center">
-            {formatMonthYear(selectedMonth)}
+            {heroLabel}
           </p>
           <p className="text-4xl font-bold tracking-tighter text-zinc-50 text-center">{formatCurrency(total)}</p>
           <p className="text-xs text-zinc-500 mt-1 font-medium text-center">{monthExpenses.length} transaction{monthExpenses.length !== 1 ? 's' : ''}</p>
