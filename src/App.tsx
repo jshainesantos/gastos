@@ -52,6 +52,7 @@ export default function App() {
             currentMonthCategoryBudgets={store.currentMonthCategoryBudgets}
             onNavigateAdd={() => setPage('add')}
             onNavigateSettings={() => setPage('settings')}
+            onNavigateHistory={() => setPage('history')}
           />
         )}
         {page === 'add' && (

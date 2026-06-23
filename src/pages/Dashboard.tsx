@@ -1,4 +1,4 @@
-import { Settings2 } from 'lucide-react'
+import { Settings2, ArrowRight } from 'lucide-react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
@@ -14,6 +14,7 @@ interface Props {
   currentMonthCategoryBudgets: MonthlyBudget[]
   onNavigateAdd: () => void
   onNavigateSettings: () => void
+  onNavigateHistory: () => void
 }
 
 export function Dashboard({
@@ -25,6 +26,7 @@ export function Dashboard({
   currentMonthCategoryBudgets,
   onNavigateAdd,
   onNavigateSettings,
+  onNavigateHistory,
 }: Props) {
   const budgetUsedPct = currentMonthBudget > 0 ? (currentMonthTotal / currentMonthBudget) * 100 : 0
   const remaining = currentMonthBudget - currentMonthTotal
@@ -198,7 +200,12 @@ export function Dashboard({
 
       {/* Recent */}
       <div className="px-5">
-        <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-3">Recent</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500">Recent</p>
+          {currentMonthExpenses.length > 0 && (
+            <button onClick={onNavigateHistory} className="flex items-center gap-1 text-xs font-semibold text-accent cursor-pointer">View all <ArrowRight size={12} /></button>
+          )}
+        </div>
 
         {recentExpenses.length === 0 ? (
           <div
