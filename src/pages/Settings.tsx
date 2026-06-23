@@ -87,7 +87,14 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
 
   return (
     <div className="pb-24">
-      <Header title="Settings" />
+      <Header
+        title="Settings"
+        right={
+          <button onClick={handleThemeToggle} className="p-2 rounded-full cursor-pointer transition-colors" style={{ color: 'var(--text-secondary)' }}>
+            {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+        }
+      />
 
       <div className="px-5 space-y-4">
 
@@ -120,28 +127,6 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
           </form>
         </div>
 
-        {/* Theme */}
-        <div className="rounded-3xl p-5" style={cardStyle}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">Appearance</p>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {theme === 'dark' ? <Moon size={16} className="text-zinc-400" /> : <Sun size={16} className="text-zinc-400" />}
-              <span className="text-sm font-medium text-zinc-200">{theme === 'dark' ? 'Dark mode' : 'Light mode'}</span>
-            </div>
-            <button
-              onClick={handleThemeToggle}
-              role="switch"
-              aria-checked={theme === 'light'}
-              className="relative w-12 h-6 rounded-full transition-colors duration-200 cursor-pointer flex-shrink-0"
-              style={{ background: theme === 'light' ? '#818CF8' : 'var(--bg-surface-2)' }}
-            >
-              <span
-                className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-200"
-                style={{ left: theme === 'light' ? '26px' : '2px' }}
-              />
-            </button>
-          </div>
-        </div>
 
         {/* Overall Budget */}
         <div className="rounded-3xl p-5" style={cardStyle}>
