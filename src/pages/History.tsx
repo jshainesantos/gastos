@@ -107,37 +107,46 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
           </div>
         ) : (
           <div className="space-y-2">
-            {monthExpenses.map(expense => {
+            {monthExpenses.map((expense, i) => {
               const cat = getCategoryById(expense.categoryId)
+              const day = expense.date.slice(0, 10)
+              const prevDay = i > 0 ? monthExpenses[i - 1].date.slice(0, 10) : null
+              const showSeparator = day !== prevDay
+              const [year, month, dayNum] = day.split('-')
+              const label = new Date(Number(year), Number(month) - 1, Number(dayNum)).toLocaleDateString('en-PH', { month: 'long', day: 'numeric', year: 'numeric' })
               return (
-                <div
-                  key={expense.id}
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-2xl"
-                  style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
-                >
-                  {cat && <CategoryIcon icon={cat.icon} color={cat.color} size={15} />}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-zinc-100 truncate tracking-tight">
-                      {expense.note || cat?.name || 'Expense'}
-                    </p>
-                    <p className="text-xs text-zinc-500 mt-0.5">{formatDate(expense.date)}</p>
-                  </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <p className="text-sm font-bold text-zinc-100 tabular-nums mr-1">{formatCurrency(expense.amount)}</p>
-                    <button
-                      onClick={() => onEdit(expense)}
-                      aria-label="Edit expense"
-                      className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-600 hover:text-accent hover:bg-white/5 transition-colors cursor-pointer"
-                    >
-                      <Pencil size={13} aria-hidden="true" />
-                    </button>
-                    <button
-                      onClick={() => setDeleteTarget(expense)}
-                      aria-label="Delete expense"
-                      className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
-                    >
-                      <Trash2 size={13} aria-hidden="true" />
-                    </button>
+                <div key={expense.id}>
+                  {showSeparator && (
+                    <p className="text-xs font-semibold text-zinc-500 px-1 pt-2 pb-1">{label}</p>
+                  )}
+                  <div
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-2xl"
+                    style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
+                  >
+                    {cat && <CategoryIcon icon={cat.icon} color={cat.color} size={15} />}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-zinc-100 truncate tracking-tight">
+                        {expense.note || cat?.name || 'Expense'}
+                      </p>
+                      <p className="text-xs text-zinc-500 mt-0.5">{cat?.name ?? ''}</p>
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <p className="text-sm font-bold text-zinc-100 tabular-nums mr-1">{formatCurrency(expense.amount)}</p>
+                      <button
+                        onClick={() => onEdit(expense)}
+                        aria-label="Edit expense"
+                        className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-600 hover:text-accent hover:bg-white/5 transition-colors cursor-pointer"
+                      >
+                        <Pencil size={13} aria-hidden="true" />
+                      </button>
+                      <button
+                        onClick={() => setDeleteTarget(expense)}
+                        aria-label="Delete expense"
+                        className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      >
+                        <Trash2 size={13} aria-hidden="true" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               )
