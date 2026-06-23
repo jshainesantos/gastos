@@ -15,6 +15,12 @@ export function useStore() {
   const [expenses, setExpenses] = useState<Expense[]>(() => loadExpenses())
   const [budgets, setBudgets] = useState<MonthlyBudget[]>(() => loadBudgets())
 
+  const reloadStore = useCallback(() => {
+    setCategories(loadCategories())
+    setExpenses(loadExpenses())
+    setBudgets(loadBudgets())
+  }, [])
+
   // Categories
   const addCategory = useCallback((category: Category) => {
     setCategories(prev => {
@@ -108,6 +114,7 @@ export function useStore() {
     addExpense,
     deleteExpense,
     updateExpense,
+    reloadStore,
     setBudget,
     getBudget,
     getCategoryBudgets,
