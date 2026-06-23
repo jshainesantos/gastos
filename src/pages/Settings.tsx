@@ -3,6 +3,7 @@ import { Check, Plus, X, Sun, Moon, User } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
 import { Select } from '../components/Select'
+import { ConfirmModal } from '../components/ConfirmModal'
 import { formatCurrency, formatMonthYear } from '../utils/formatters'
 import { loadTheme, saveTheme, loadName, saveName, type Theme } from '../utils/storage'
 import type { Category, MonthlyBudget } from '../types'
@@ -27,6 +28,9 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
   const [addCategoryId, setAddCategoryId] = useState('')
   const [addAmount, setAddAmount] = useState('')
   const [addError, setAddError] = useState('')
+
+  // Delete category budget confirm
+  const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null)
 
   // Theme
   const [theme, setTheme] = useState<Theme>(() => loadTheme())
@@ -202,7 +206,7 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
                     <span className="flex-1 text-sm font-medium text-zinc-100 truncate">{cat.name}</span>
                     <span className="text-sm font-bold text-zinc-100 tabular-nums">{formatCurrency(b.amount)}</span>
                     <button
-                      onClick={() => onSetBudget(currentYearMonth, 0, b.categoryId)}
+                      onClick={() => setDeletingCategoryId(b.categoryId)}
                       aria-label={`Remove ${cat.name} budget`}
                       className="w-7 h-7 flex items-center justify-center rounded-xl text-zinc-600 hover:text-red-400 hover:bg-white/5 transition-colors cursor-pointer"
                     >
@@ -270,6 +274,19 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
         </div>
 
       </div>
+
+      {deletingCategoryId && (() => {
+        const cat = categories.find(c => c.id === deletingCategoryId)
+        return (
+          <ConfirmModal
+            title="Remove category budget?"
+            message={`This will remove the budget for ${cat?.name ?? 'this category'}.`}
+            confirmLabel="Remove"
+            onConfirm={() => { onSetBudget(currentYearMonth, 0, deletingCategoryId); setDeletingCategoryId(null) }}
+            onCancel={() => setDeletingCategoryId(null)}
+          />
+        )
+      })()}
     </div>
   )
 }
