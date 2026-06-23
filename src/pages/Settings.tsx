@@ -206,7 +206,7 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
                     <span className="flex-1 text-sm font-medium text-zinc-100 truncate">{cat.name}</span>
                     <span className="text-sm font-bold text-zinc-100 tabular-nums">{formatCurrency(b.amount)}</span>
                     <button
-                      onClick={() => setDeletingCategoryId(b.categoryId)}
+                      onClick={() => setDeletingCategoryId(b.categoryId ?? null)}
                       aria-label={`Remove ${cat.name} budget`}
                       className="w-7 h-7 flex items-center justify-center rounded-xl text-zinc-600 hover:text-red-400 hover:bg-white/5 transition-colors cursor-pointer"
                     >

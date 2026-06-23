@@ -4,7 +4,7 @@ import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
 import { ConfirmModal } from '../components/ConfirmModal'
 import { MultiSelect } from '../components/MultiSelect'
-import { formatCurrency, formatDate, formatMonthYear, getCurrentYearMonth, toYearMonth } from '../utils/formatters'
+import { formatCurrency, formatMonthYear, getCurrentYearMonth, toYearMonth } from '../utils/formatters'
 import type { Category, Expense } from '../types'
 
 interface Props {
