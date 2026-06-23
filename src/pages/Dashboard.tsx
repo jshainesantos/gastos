@@ -139,10 +139,17 @@ export function Dashboard({
                         <Cell key={cat.id} fill={cat.color} />
                       ))}
                     </Pie>
-                    <Tooltip
-                      formatter={(v: number) => formatCurrency(v)}
-                      contentStyle={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-md)', borderRadius: 12, color: '#f4f4f5', fontSize: 12 }}
-                    />
+                    <Tooltip content={({ active, payload }) => {
+                      if (!active || !payload?.length) return null
+                      const { name, value, payload: p } = payload[0]
+                      return (
+                        <div style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-md)', borderRadius: 10, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', background: p.color, flexShrink: 0, display: 'inline-block' }} />
+                          <span style={{ fontSize: 12, color: 'var(--text-secondary)', marginRight: 4 }}>{name}</span>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>{formatCurrency(value as number)}</span>
+                        </div>
+                      )
+                    }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
