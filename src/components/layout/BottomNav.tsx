@@ -47,7 +47,7 @@ export function BottomNav({ current, onNavigate }: Props) {
                       boxShadow: '0 0 0 4px var(--bg-nav), 0 8px 24px rgba(99,102,241,0.5)',
                     }}
                   >
-                    <Icon size={22} strokeWidth={2.5} aria-hidden="true" />
+                    <Icon size={22} strokeWidth={2.5} aria-hidden="true" className="text-white" />
                   </span>
                 ) : (
                   <>
