@@ -9,7 +9,7 @@ import { Settings } from './pages/Settings'
 import { Onboarding } from './pages/Onboarding'
 import { useStore } from './hooks/useStore'
 import { useToast } from './hooks/useToast'
-import { hasOnboarded, markOnboarded, loadName, saveName, applyTheme, type Theme } from './utils/storage'
+import { hasOnboarded, markOnboarded, loadName, saveName, applyTheme } from './utils/storage'
 import type { Expense, Page } from './types'
 
 export default function App() {
@@ -104,13 +104,6 @@ export default function App() {
               }
             }}
             onNameChange={n => setUserName(n)}
-            onImportComplete={(name: string, theme: Theme, importedOnboarded: boolean) => {
-              store.reloadStore()
-              setUserName(name)
-              setOnboarded(importedOnboarded)
-              document.documentElement.setAttribute('data-theme', theme)
-            }}
-            onToast={toast}
           />
         )}
       </main>

@@ -1,22 +1,11 @@
-import { useRef, useState } from 'react'
-import { Check, Plus, X, Sun, Moon, User, Download, Upload } from 'lucide-react'
+import { useState } from 'react'
+import { Check, Plus, X, Sun, Moon, User } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { CategoryIcon } from '../components/CategoryIcon'
 import { Select } from '../components/Select'
 import { ConfirmModal } from '../components/ConfirmModal'
 import { formatCurrency, formatMonthYear } from '../utils/formatters'
-import {
-  backupFileName,
-  createBackup,
-  importBackup,
-  loadName,
-  loadTheme,
-  readBackup,
-  saveName,
-  saveTheme,
-  type GastosBackup,
-  type Theme,
-} from '../utils/storage'
+import { loadTheme, saveTheme, loadName, saveName, type Theme } from '../utils/storage'
 import type { Category, MonthlyBudget } from '../types'
 
 interface Props {
@@ -26,13 +15,11 @@ interface Props {
   currentCategoryBudgets: MonthlyBudget[]
   onSetBudget: (yearMonth: string, amount: number, categoryId?: string) => void
   onNameChange: (name: string) => void
-  onImportComplete: (name: string, theme: Theme, onboarded: boolean) => void
-  onToast: (message: string, type?: 'success' | 'error' | 'warning') => void
 }
 
 const cardStyle = { background: 'var(--bg-surface)', border: '1px solid var(--border)' }
 
-export function Settings({ categories, currentYearMonth, currentBudget, currentCategoryBudgets, onSetBudget, onNameChange, onImportComplete, onToast }: Props) {
+export function Settings({ categories, currentYearMonth, currentBudget, currentCategoryBudgets, onSetBudget, onNameChange }: Props) {
   // Budget
   const [amount, setAmount] = useState(currentBudget > 0 ? String(currentBudget) : '')
   const [saved, setSaved] = useState(false)
@@ -49,14 +36,10 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
   const [theme, setTheme] = useState<Theme>(() => loadTheme())
 
   // Name
-  const [savedName, setSavedName] = useState(() => loadName())
+  const [savedName] = useState(() => loadName())
   const [name, setName] = useState(() => loadName())
   const [nameSaved, setNameSaved] = useState(false)
   const nameChanged = name.trim() !== savedName.trim()
-
-  // Backup
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const [pendingImport, setPendingImport] = useState<{ backup: GastosBackup; rawJson: string } | null>(null)
 
   function handleSave(e: React.FormEvent) {
     e.preventDefault()
@@ -95,55 +78,9 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
     e.preventDefault()
     const trimmed = name.trim()
     saveName(trimmed)
-    setSavedName(trimmed)
     onNameChange(trimmed)
     setNameSaved(true)
     setTimeout(() => setNameSaved(false), 2000)
-  }
-
-  function handleExport() {
-    const backup = createBackup()
-    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = backupFileName()
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    URL.revokeObjectURL(url)
-    onToast('Backup exported.')
-  }
-
-  async function handleImportFile(file: File) {
-    try {
-      const rawJson = await file.text()
-      const backup = importBackupPreview(rawJson)
-      setPendingImport({ backup, rawJson })
-    } catch (err) {
-      onToast(err instanceof Error ? err.message : 'Import failed.', 'error')
-    } finally {
-      if (fileInputRef.current) fileInputRef.current.value = ''
-    }
-  }
-
-  function importBackupPreview(rawJson: string): GastosBackup {
-    return readBackup(rawJson)
-  }
-
-  function confirmImport() {
-    if (!pendingImport) return
-    try {
-      const backup = importBackup(pendingImport.rawJson)
-      setTheme(backup.data.theme)
-      setName(backup.data.name)
-      setSavedName(backup.data.name)
-      onImportComplete(backup.data.name, backup.data.theme, backup.data.onboarded)
-      onToast('Backup imported.')
-      setPendingImport(null)
-    } catch (err) {
-      onToast(err instanceof Error ? err.message : 'Import failed.', 'error')
-    }
   }
 
   const parsedAmount = parseFloat(amount)
@@ -192,41 +129,6 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
               {nameSaved ? <><Check size={14} /> Updated</> : savedName ? 'Update' : 'Save'}
             </button>
           </form>
-        </div>
-
-        {/* Backup */}
-        <div className="rounded-3xl p-5" style={cardStyle}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">Backup</p>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={handleExport}
-              className="py-3 rounded-2xl font-bold text-sm text-white transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
-              style={{ background: '#818CF8', boxShadow: '0 0 16px rgba(129,140,248,0.16)' }}
-            >
-              <Download size={15} aria-hidden="true" />
-              Export
-            </button>
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="py-3 rounded-2xl font-bold text-sm text-zinc-300 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-              style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-dim)' }}
-            >
-              <Upload size={15} aria-hidden="true" />
-              Import
-            </button>
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/json,.json"
-            className="hidden"
-            onChange={e => {
-              const file = e.target.files?.[0]
-              if (file) void handleImportFile(file)
-            }}
-          />
         </div>
 
 
@@ -385,16 +287,6 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
           />
         )
       })()}
-
-      {pendingImport && (
-        <ConfirmModal
-          title="Import backup?"
-          message={`This will replace your current data with ${pendingImport.backup.data.expenses.length} expenses, ${pendingImport.backup.data.categories.length} categories, and ${pendingImport.backup.data.budgets.length} budgets from the backup.`}
-          confirmLabel="Import"
-          onConfirm={confirmImport}
-          onCancel={() => setPendingImport(null)}
-        />
-      )}
     </div>
   )
 }
