@@ -12,9 +12,11 @@ interface Props {
   options: Option[]
   placeholder?: string
   label?: string
+  noun?: string
+  allSelectedLabel?: string
 }
 
-export function MultiSelect({ values, onChange, options, placeholder = 'Select…', label }: Props) {
+export function MultiSelect({ values, onChange, options, placeholder = 'Select…', label, noun = 'months', allSelectedLabel }: Props) {
   const [open, setOpen] = useState(false)
   const sheetRef = useRef<HTMLDivElement>(null)
 
@@ -43,9 +45,11 @@ export function MultiSelect({ values, onChange, options, placeholder = 'Select�
   }
 
   const displayLabel =
-    values.length === 1
-      ? options.find(o => o.value === values[0])?.label ?? placeholder
-      : `${values.length} months selected`
+    allSelectedLabel && values.length === options.length && options.length > 1
+      ? allSelectedLabel
+      : values.length === 1
+        ? options.find(o => o.value === values[0])?.label ?? placeholder
+        : `${values.length} ${noun} selected`
 
   return (
     <>
