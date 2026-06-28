@@ -19,11 +19,9 @@ interface Props {
 export function History({ categories, expenses, availableMonths, onDelete, onEdit }: Props) {
   const allMonths = availableMonths.length > 0 ? availableMonths : [getCurrentYearMonth()]
   const [selectedMonths, setSelectedMonths] = useState([allMonths[0]])
-  const [selectedCategories, setSelectedCategories] = useState(() => categories.map(c => c.id))
 
   const filtered = expenses
     .filter(e => selectedMonths.includes(toYearMonth(e.date)))
-    .filter(e => selectedCategories.includes(e.categoryId))
     .sort((a, b) => b.date.localeCompare(a.date))
 
   const total = filtered.reduce((sum, e) => sum + e.amount, 0)
@@ -38,21 +36,13 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
     <div className="pb-24">
       <Header title="History" />
 
-      <div className="px-5 mb-5 grid grid-cols-2 gap-3">
+      <div className="px-5 mb-5">
         <MultiSelect
           values={selectedMonths}
           onChange={setSelectedMonths}
           options={allMonths.map(m => ({ value: m, label: formatMonthYear(m) }))}
           label="Months"
           noun="months"
-        />
-        <MultiSelect
-          values={selectedCategories}
-          onChange={setSelectedCategories}
-          options={categories.map(c => ({ value: c.id, label: c.name }))}
-          label="Categories"
-          noun="categories"
-          allSelectedLabel="All categories"
         />
       </div>
 
