@@ -35,7 +35,7 @@ export function Dashboard({
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
 
   return (
-    <div className="pb-24">
+    <div className="pb-24 lg:pb-12">
       <Header
         title={userName ? `${greeting}, ${userName.split(' ')[0]}` : greeting}
         subtitle={new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric' })}
@@ -50,31 +50,30 @@ export function Dashboard({
         }
       />
 
-      <div className="px-5 mb-5">
-        <HeroCard
-          total={currentMonthTotal}
-          budget={currentMonthBudget}
-          onNavigateSettings={onNavigateSettings}
-        />
-      </div>
-
-      {categoryTotals.length > 0 && (
-        <div className="px-5 mb-5">
-          <CategoryBreakdown
-            categoryTotals={categoryTotals}
-            monthTotal={currentMonthTotal}
-            categoryBudgets={currentMonthCategoryBudgets}
+      <div className="px-5 lg:grid lg:grid-cols-2 lg:gap-5 lg:items-start">
+        <div className="mb-5 lg:mb-0">
+          <HeroCard
+            total={currentMonthTotal}
+            budget={currentMonthBudget}
+            onNavigateSettings={onNavigateSettings}
           />
         </div>
-      )}
 
-      <div className="px-5">
-        <RecentExpenses
-          expenses={currentMonthExpenses}
-          categories={categories}
-          onNavigateAdd={onNavigateAdd}
-          onNavigateHistory={onNavigateHistory}
-        />
+        <div className="flex flex-col gap-5">
+          {categoryTotals.length > 0 && (
+            <CategoryBreakdown
+              categoryTotals={categoryTotals}
+              monthTotal={currentMonthTotal}
+              categoryBudgets={currentMonthCategoryBudgets}
+            />
+          )}
+          <RecentExpenses
+            expenses={currentMonthExpenses}
+            categories={categories}
+            onNavigateAdd={onNavigateAdd}
+            onNavigateHistory={onNavigateHistory}
+          />
+        </div>
       </div>
     </div>
   )
