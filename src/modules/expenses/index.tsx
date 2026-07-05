@@ -22,7 +22,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
   const editing = !!initialExpense
 
   const [amount, setAmount] = useState(editing ? String(initialExpense!.amount) : '')
-  const [categoryId, setCategoryId] = useState(editing ? initialExpense!.categoryId : (categories[0]?.id ?? ''))
+  const [categoryId, setCategoryId] = useState(editing ? initialExpense!.categoryId : ([...categories].sort((a, b) => Number(a.isDefault) - Number(b.isDefault))[0]?.id ?? ''))
   const [note, setNote] = useState(editing ? initialExpense!.note : '')
   const [date, setDate] = useState(editing ? initialExpense!.date : () => new Date().toISOString().slice(0, 10))
   const [submitted, setSubmitted] = useState(false)
