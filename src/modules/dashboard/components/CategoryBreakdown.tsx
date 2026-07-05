@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
+import { useState } from 'react'
 import { formatCurrency } from '../../../utils/formatters'
 import { getBudgetBarColor } from '../../../helpers/budget'
 import type { Category, MonthlyBudget } from '../../../types'
@@ -13,6 +13,54 @@ interface Props {
   categoryBudgets: MonthlyBudget[]
 }
 
+function DonutChart({ data }: { data: CategoryTotal[] }) {
+  const [hovered, setHovered] = useState<string | null>(null)
+  const hoveredCat = data.find(d => d.id === hovered)
+  const total = data.reduce((sum, d) => sum + d.total, 0)
+  const cx = 56, cy = 56, ir = 32, or = 52
+  let angle = -Math.PI / 2
+
+  return (
+    <div className="relative w-28 h-28 flex-shrink-0">
+      <svg width="112" height="112" viewBox="0 0 112 112">
+        {data.map(d => {
+          const sweep = (d.total / total) * (2 * Math.PI)
+          const gap = data.length > 1 ? 0.04 : 0
+          const start = angle
+          const end = angle + sweep - gap
+          angle += sweep
+          const large = sweep - gap > Math.PI ? 1 : 0
+          const x1 = cx + or * Math.cos(start), y1 = cy + or * Math.sin(start)
+          const x2 = cx + or * Math.cos(end),   y2 = cy + or * Math.sin(end)
+          const x3 = cx + ir * Math.cos(end),   y3 = cy + ir * Math.sin(end)
+          const x4 = cx + ir * Math.cos(start), y4 = cy + ir * Math.sin(start)
+          return (
+            <path
+              key={d.id}
+              d={`M${x1} ${y1} A${or} ${or} 0 ${large} 1 ${x2} ${y2} L${x3} ${y3} A${ir} ${ir} 0 ${large} 0 ${x4} ${y4}Z`}
+              fill={d.color}
+              opacity={hovered && hovered !== d.id ? 0.35 : 1}
+              style={{ transition: 'opacity 0.15s', cursor: 'default' }}
+              onMouseEnter={() => setHovered(d.id)}
+              onMouseLeave={() => setHovered(null)}
+            />
+          )
+        })}
+      </svg>
+      {hoveredCat && (
+        <div
+          className="absolute left-1/2 -translate-x-1/2 -top-10 z-10 flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 pointer-events-none whitespace-nowrap"
+          style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-md)' }}
+        >
+          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: hoveredCat.color }} />
+          <span className="text-[11px] text-zinc-400">{hoveredCat.name}</span>
+          <span className="text-[11px] font-semibold text-zinc-100 tabular-nums">{formatCurrency(hoveredCat.total)}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets }: Props) {
   return (
     <div
@@ -22,37 +70,7 @@ export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets 
       <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-4">Breakdown</p>
 
       <div className="flex items-center gap-4">
-        <div className="w-28 h-28 flex-shrink-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={categoryTotals}
-                cx="50%"
-                cy="50%"
-                innerRadius={32}
-                outerRadius={52}
-                dataKey="total"
-                strokeWidth={0}
-                paddingAngle={2}
-              >
-                {categoryTotals.map(cat => (
-                  <Cell key={cat.id} fill={cat.color} />
-                ))}
-              </Pie>
-              <Tooltip content={({ active, payload }) => {
-                if (!active || !payload?.length) return null
-                const { name, value, payload: p } = payload[0]
-                return (
-                  <div style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-md)', borderRadius: 10, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: p.color, flexShrink: 0, display: 'inline-block' }} />
-                    <span style={{ fontSize: 12, color: 'var(--text-secondary)', marginRight: 4 }}>{name}</span>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>{formatCurrency(value as number)}</span>
-                  </div>
-                )
-              }} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+        <DonutChart data={categoryTotals} />
 
         <div className="flex-1 min-w-0 space-y-2.5">
           {categoryTotals.slice(0, 4).map(cat => {
