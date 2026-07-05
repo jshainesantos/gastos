@@ -6,6 +6,7 @@ import { CategoryBreakdownList } from './components/CategoryBreakdownList'
 import { TransactionList } from './components/TransactionList'
 import { computeCategoryTotals } from '../../helpers/categories'
 import { formatMonthYear, getCurrentYearMonth, toYearMonth } from '../../utils/formatters'
+import { CategoryFilter } from './components/CategoryFilter'
 import type { Category, Expense } from '../../types'
 
 interface Props {
@@ -17,12 +18,27 @@ interface Props {
 }
 
 export function History({ categories, expenses, availableMonths, onDelete, onEdit }: Props) {
-  const allMonths = availableMonths.length > 0 ? availableMonths : [getCurrentYearMonth()]
-  const [selectedMonths, setSelectedMonths] = useState([allMonths[0]])
+  const currentYearMonth = getCurrentYearMonth()
+  const allMonths = availableMonths.includes(currentYearMonth)
+    ? availableMonths
+    : [currentYearMonth, ...availableMonths]
+  const [selectedMonths, setSelectedMonths] = useState([currentYearMonth])
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([])
 
-  const filtered = expenses
-    .filter(e => selectedMonths.includes(toYearMonth(e.date)))
-    .sort((a, b) => b.date.localeCompare(a.date))
+  function handleMonthsChange(months: string[]) {
+    setSelectedMonths(months)
+    setSelectedCategoryIds([])
+  }
+
+  const monthFiltered = expenses.filter(e => selectedMonths.includes(toYearMonth(e.date)))
+
+  const activeCategoryIds = [...new Set(monthFiltered.map(e => e.categoryId))]
+  const activeCategories = categories.filter(c => activeCategoryIds.includes(c.id))
+
+  const filtered = (selectedCategoryIds.length === 0
+    ? monthFiltered
+    : monthFiltered.filter(e => selectedCategoryIds.includes(e.categoryId))
+  ).sort((a, b) => b.date.localeCompare(a.date))
 
   const total = filtered.reduce((sum, e) => sum + e.amount, 0)
   const categoryTotals = computeCategoryTotals(categories, filtered)
@@ -33,18 +49,28 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
       : `${selectedMonths.length} months`
 
   return (
-    <div className="pb-24">
+    <div className="pb-24 lg:pb-12">
       <Header title="History" />
 
-      <div className="px-5 mb-5">
+      <div className="px-5 mb-4">
         <MultiSelect
           values={selectedMonths}
-          onChange={setSelectedMonths}
+          onChange={handleMonthsChange}
           options={allMonths.map(m => ({ value: m, label: formatMonthYear(m) }))}
           label="Months"
           noun="months"
         />
       </div>
+
+      {activeCategories.length > 1 && (
+        <div className="px-5 mb-5">
+          <CategoryFilter
+            categories={activeCategories}
+            selected={selectedCategoryIds}
+            onChange={setSelectedCategoryIds}
+          />
+        </div>
+      )}
 
       <div className="px-5 mb-5">
         <HistoryHero total={total} label={heroLabel} count={filtered.length} />
