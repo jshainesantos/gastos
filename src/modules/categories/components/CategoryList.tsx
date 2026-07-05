@@ -10,7 +10,7 @@ interface Props {
 export function CategoryList({ categories, onDeleteRequest }: Props) {
   return (
     <div className="px-5 space-y-2">
-      {categories.map(cat => (
+      {[...categories].sort((a, b) => Number(a.isDefault) - Number(b.isDefault)).map(cat => (
         <div
           key={cat.id}
           className="flex items-center gap-3 px-4 py-3.5 rounded-2xl"

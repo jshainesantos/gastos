@@ -18,7 +18,7 @@ export function useStore() {
   // Categories
   const addCategory = useCallback((category: Category) => {
     setCategories(prev => {
-      const next = [...prev, category]
+      const next = [category, ...prev]
       saveCategories(next)
       return next
     })

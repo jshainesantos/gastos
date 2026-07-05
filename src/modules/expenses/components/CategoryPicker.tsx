@@ -12,7 +12,7 @@ export function CategoryPicker({ categories, selected, onSelect }: Props) {
     <div>
       <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-3">Category</p>
       <div className="grid grid-cols-2 gap-2">
-        {categories.map(cat => {
+        {[...categories].sort((a, b) => Number(a.isDefault) - Number(b.isDefault)).map(cat => {
           const active = selected === cat.id
           return (
             <button
