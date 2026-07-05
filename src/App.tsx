@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BottomNav } from './components/layout/BottomNav'
+import { SideNav } from './components/layout/SideNav'
 import { Toaster } from './components/Toaster'
 import { Dashboard } from './modules/dashboard'
 import { AddExpense } from './modules/expenses'
@@ -41,7 +42,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-canvas text-zinc-100 font-sans">
-      <main className="max-w-[430px] mx-auto" id="main-content">
+      <SideNav current={page} onNavigate={p => { setEditingExpense(null); setPage(p) }} />
+      <main className="lg:pl-60" id="main-content">
+        <div className="max-w-[430px] mx-auto lg:max-w-3xl">
         {page === 'dashboard' && (
           <Dashboard
             userName={userName}
@@ -106,6 +109,7 @@ export default function App() {
             onNameChange={n => setUserName(n)}
           />
         )}
+        </div>
       </main>
 
       <Toaster toasts={toasts} onDismiss={dismiss} />

@@ -17,7 +17,7 @@ const items: { page: Page; label: string; Icon: React.ElementType }[] = [
 export function BottomNav({ current, onNavigate }: Props) {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-30"
+      className="fixed bottom-0 left-0 right-0 z-30 lg:hidden"
       style={{ background: 'var(--bg-nav)', backdropFilter: 'blur(20px)', borderTop: '1px solid var(--border-dim)' }}
       aria-label="Main navigation"
     >

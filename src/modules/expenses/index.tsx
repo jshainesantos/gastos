@@ -65,7 +65,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
   }
 
   return (
-    <div className="pb-24">
+    <div className="pb-24 lg:pb-12">
       <Header
         title={editing ? 'Edit Expense' : 'Add Expense'}
         left={editing && onBack ? (

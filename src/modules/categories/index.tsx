@@ -34,7 +34,7 @@ export function Categories({ categories, onAdd, onDelete }: Props) {
   }
 
   return (
-    <div className="pb-24">
+    <div className="pb-24 lg:pb-12">
       <Header
         title="Categories"
         right={
