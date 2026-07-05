@@ -53,21 +53,21 @@ export function Select({ value, onChange, options, placeholder = 'Select…', la
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end" aria-modal="true" role="dialog">
+        <div className="fixed inset-0 z-50 flex flex-col justify-end lg:justify-center lg:items-center" aria-modal="true" role="dialog">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
 
-          {/* Sheet */}
+          {/* Sheet / Modal */}
           <div
             ref={sheetRef}
-            className="relative rounded-t-3xl overflow-hidden flex flex-col"
+            className="relative rounded-t-3xl lg:rounded-3xl overflow-hidden flex flex-col lg:w-[320px] lg:shadow-2xl"
             style={{ background: '#18181b', maxHeight: '70vh' }}
           >
-            {/* Handle */}
-            <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
+            {/* Handle — mobile only */}
+            <div className="flex justify-center pt-3 pb-1 flex-shrink-0 lg:hidden">
               <div className="w-9 h-1 rounded-full bg-zinc-700" />
             </div>
 

@@ -91,26 +91,28 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
           onSelect={setCategoryId}
         />
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">Date</p>
-            <DatePicker value={date} onChange={setDate} label="Date" />
-          </div>
-          <div>
-            <label htmlFor="note" className="block text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">
-              Note
-            </label>
-            <input
-              id="note"
-              type="text"
-              placeholder="Optional"
-              value={note}
-              onChange={e => setNote(e.target.value)}
-              maxLength={100}
-              className={inputClass}
-              style={inputStyle}
-            />
-          </div>
+        <div>
+          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">Date</p>
+          <DatePicker value={date} onChange={setDate} label="Date" />
+        </div>
+
+        <div>
+          <label htmlFor="note" className="block text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">
+            Note
+          </label>
+          <textarea
+            id="note"
+            placeholder="Add a note..."
+            value={note}
+            onChange={e => setNote(e.target.value)}
+            maxLength={200}
+            rows={2}
+            className={inputClass + ' resize-none leading-relaxed'}
+            style={inputStyle}
+          />
+          {note.length > 150 && (
+            <p className="text-right text-[10px] text-zinc-600 mt-1">{note.length}/200</p>
+          )}
         </div>
 
         <button
