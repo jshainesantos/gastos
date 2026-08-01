@@ -3,12 +3,15 @@ import { Header } from '../../components/layout/Header'
 import { HeroCard } from './components/HeroCard'
 import { CategoryBreakdown } from './components/CategoryBreakdown'
 import { RecentExpenses } from './components/RecentExpenses'
+import { MonthPicker } from '../../components/MonthPicker'
 import { computeCategoryTotals } from '../../helpers/categories'
 import type { Category, Expense, MonthlyBudget } from '../../types'
 
 interface Props {
   userName: string
   categories: Category[]
+  selectedYearMonth: string
+  onMonthChange: (ym: string) => void
   currentMonthExpenses: Expense[]
   currentMonthTotal: number
   currentMonthBudget: number
@@ -21,6 +24,8 @@ interface Props {
 export function Dashboard({
   userName,
   categories,
+  selectedYearMonth,
+  onMonthChange,
   currentMonthExpenses,
   currentMonthTotal,
   currentMonthBudget,
@@ -49,6 +54,8 @@ export function Dashboard({
           </button>
         }
       />
+
+      <MonthPicker value={selectedYearMonth} onChange={onMonthChange} />
 
       <div className="px-5 lg:grid lg:grid-cols-2 lg:gap-5 lg:items-start">
         <div className="mb-5 lg:mb-0">

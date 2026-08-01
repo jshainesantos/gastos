@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { BottomNav } from './components/layout/BottomNav'
 import { SideNav } from './components/layout/SideNav'
 import { Toaster } from './components/Toaster'
@@ -11,6 +11,7 @@ import { Onboarding } from './modules/onboarding'
 import { useStore } from './hooks/useStore'
 import { useToast } from './hooks/useToast'
 import { hasOnboarded, markOnboarded, loadName, saveName, applyTheme } from './utils/storage'
+import { getCurrentYearMonth } from './utils/formatters'
 import type { Expense, Page } from './types'
 
 export default function App() {
@@ -22,8 +23,20 @@ export default function App() {
   }, [])
   const [page, setPage] = useState<Page>('dashboard')
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
+  const [selectedYearMonth, setSelectedYearMonth] = useState(() => getCurrentYearMonth())
   const store = useStore()
   const { toasts, toast, dismiss } = useToast()
+
+  const selectedMonthExpenses = useMemo(
+    () => store.getExpensesForMonth(selectedYearMonth),
+    [store.getExpensesForMonth, selectedYearMonth]
+  )
+  const selectedMonthTotal = useMemo(
+    () => selectedMonthExpenses.reduce((sum, e) => sum + e.amount, 0),
+    [selectedMonthExpenses]
+  )
+  const selectedMonthBudget = store.getBudget(selectedYearMonth)
+  const selectedMonthCategoryBudgets = store.getCategoryBudgets(selectedYearMonth)
 
   if (!onboarded) {
     return (
@@ -49,10 +62,12 @@ export default function App() {
           <Dashboard
             userName={userName}
             categories={store.categories}
-            currentMonthExpenses={store.currentMonthExpenses}
-            currentMonthTotal={store.currentMonthTotal}
-            currentMonthBudget={store.currentMonthBudget}
-            currentMonthCategoryBudgets={store.currentMonthCategoryBudgets}
+            selectedYearMonth={selectedYearMonth}
+            onMonthChange={setSelectedYearMonth}
+            currentMonthExpenses={selectedMonthExpenses}
+            currentMonthTotal={selectedMonthTotal}
+            currentMonthBudget={selectedMonthBudget}
+            currentMonthCategoryBudgets={selectedMonthCategoryBudgets}
             onNavigateAdd={() => setPage('add')}
             onNavigateSettings={() => setPage('settings')}
             onNavigateHistory={() => setPage('history')}
@@ -74,9 +89,10 @@ export default function App() {
         )}
         {page === 'history' && (
           <History
+            key={selectedYearMonth}
             categories={store.categories}
             expenses={store.expenses}
-            availableMonths={store.availableMonths}
+            selectedYearMonth={selectedYearMonth}
             onDelete={id => { store.deleteExpense(id); toast('Expense deleted.', 'warning') }}
             onEdit={expense => { setEditingExpense(expense); setPage('add') }}
           />
@@ -95,9 +111,9 @@ export default function App() {
         {page === 'settings' && (
           <Settings
             categories={store.categories}
-            currentYearMonth={store.currentYearMonth}
-            currentBudget={store.currentMonthBudget}
-            currentCategoryBudgets={store.currentMonthCategoryBudgets}
+            currentYearMonth={selectedYearMonth}
+            currentBudget={selectedMonthBudget}
+            currentCategoryBudgets={selectedMonthCategoryBudgets}
             onSetBudget={(ym, amount, categoryId) => {
               store.setBudget(ym, amount, categoryId)
               if (categoryId) {
