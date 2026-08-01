@@ -26,7 +26,7 @@ export function BottomNav({ current, onNavigate }: Props) {
           const active = current === page
           const isAdd = page === 'add'
           return (
-            <li key={page}>
+            <li key={page} className={isAdd && current === 'add' ? 'hidden' : ''}>
               <button
                 onClick={() => onNavigate(page)}
                 aria-label={label}
