@@ -65,7 +65,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
   }
 
   return (
-    <div className="pb-24 lg:pb-12">
+    <div className="pb-48 lg:pb-12">
       <Header
         title={editing ? 'Edit Expense' : 'Add Expense'}
         left={editing && onBack ? (
@@ -78,7 +78,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
         ) : undefined}
       />
 
-      <form onSubmit={handleSubmit} noValidate className="px-5 space-y-5">
+      <form id="add-expense-form" onSubmit={handleSubmit} noValidate className="px-5 space-y-5">
         <AmountInput
           amount={amount}
           error={error}
@@ -115,20 +115,26 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
           )}
         </div>
 
-        <button
-          type="submit"
-          className="w-full py-4 rounded-2xl font-bold text-base tracking-tight transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-white active:scale-[0.98]"
-          style={{
-            background: submitted ? '#059669' : '#818CF8',
-            boxShadow: submitted ? '0 0 24px rgba(5,150,105,0.3)' : '0 0 24px rgba(129,140,248,0.25)',
-          }}
-        >
-          {submitted
-            ? <><Check size={18} aria-hidden="true" /> Saved!</>
-            : editing ? 'Save Changes' : 'Add Expense'
-          }
-        </button>
       </form>
+
+      <div className="fixed bottom-0 left-0 right-0 z-20 lg:static">
+        <div className="max-w-[430px] mx-auto px-5 pb-[84px] pt-4 lg:px-5 lg:pb-0 lg:pt-5">
+          <button
+            form="add-expense-form"
+            type="submit"
+            className="w-full py-4 rounded-2xl font-bold text-base tracking-tight transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-white active:scale-[0.98]"
+            style={{
+              background: submitted ? '#059669' : '#818CF8',
+              boxShadow: submitted ? '0 0 24px rgba(5,150,105,0.3)' : '0 0 24px rgba(129,140,248,0.25)',
+            }}
+          >
+            {submitted
+              ? <><Check size={18} aria-hidden="true" /> Saved!</>
+              : editing ? 'Save Changes' : 'Add Expense'
+            }
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
