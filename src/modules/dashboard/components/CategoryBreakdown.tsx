@@ -62,6 +62,9 @@ function DonutChart({ data }: { data: CategoryTotal[] }) {
 }
 
 export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets }: Props) {
+  const [showAll, setShowAll] = useState(false)
+  const visible = showAll ? categoryTotals : categoryTotals.slice(0, 4)
+
   return (
     <div
       className="rounded-3xl p-5"
@@ -73,7 +76,7 @@ export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets 
         <DonutChart data={categoryTotals} />
 
         <div className="flex-1 min-w-0 space-y-2.5">
-          {categoryTotals.slice(0, 4).map(cat => {
+          {visible.map(cat => {
             const catBudget = categoryBudgets.find(b => b.categoryId === cat.id)
             const catRemaining = catBudget ? catBudget.amount - cat.total : null
             const catPct = catBudget ? Math.min((cat.total / catBudget.amount) * 100, 100) : 0
@@ -105,7 +108,12 @@ export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets 
             )
           })}
           {categoryTotals.length > 4 && (
-            <p className="text-xs text-zinc-600">+{categoryTotals.length - 4} more</p>
+            <button
+              onClick={() => setShowAll(v => !v)}
+              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              {showAll ? 'Show less' : `+${categoryTotals.length - 4} more`}
+            </button>
           )}
         </div>
       </div>
