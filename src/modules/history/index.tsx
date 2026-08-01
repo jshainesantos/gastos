@@ -1,36 +1,25 @@
 import { useState } from 'react'
 import { Header } from '../../components/layout/Header'
-import { MultiSelect } from '../../components/MultiSelect'
 import { HistoryHero } from './components/HistoryHero'
 import { CategoryBreakdownList } from './components/CategoryBreakdownList'
 import { TransactionList } from './components/TransactionList'
 import { computeCategoryTotals } from '../../helpers/categories'
-import { formatMonthYear, getCurrentYearMonth, toYearMonth } from '../../utils/formatters'
+import { formatMonthYear, toYearMonth } from '../../utils/formatters'
 import { CategoryFilter } from './components/CategoryFilter'
 import type { Category, Expense } from '../../types'
 
 interface Props {
   categories: Category[]
   expenses: Expense[]
-  availableMonths: string[]
+  selectedYearMonth: string
   onDelete: (id: string) => void
   onEdit: (expense: Expense) => void
 }
 
-export function History({ categories, expenses, availableMonths, onDelete, onEdit }: Props) {
-  const currentYearMonth = getCurrentYearMonth()
-  const allMonths = availableMonths.includes(currentYearMonth)
-    ? availableMonths
-    : [currentYearMonth, ...availableMonths]
-  const [selectedMonths, setSelectedMonths] = useState([currentYearMonth])
+export function History({ categories, expenses, selectedYearMonth, onDelete, onEdit }: Props) {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([])
 
-  function handleMonthsChange(months: string[]) {
-    setSelectedMonths(months)
-    setSelectedCategoryIds([])
-  }
-
-  const monthFiltered = expenses.filter(e => selectedMonths.includes(toYearMonth(e.date)))
+  const monthFiltered = expenses.filter(e => toYearMonth(e.date) === selectedYearMonth)
 
   const activeCategoryIds = [...new Set(monthFiltered.map(e => e.categoryId))]
   const activeCategories = categories.filter(c => activeCategoryIds.includes(c.id))
@@ -43,24 +32,9 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
   const total = filtered.reduce((sum, e) => sum + e.amount, 0)
   const categoryTotals = computeCategoryTotals(categories, filtered)
 
-  const heroLabel =
-    selectedMonths.length === 1
-      ? formatMonthYear(selectedMonths[0])
-      : `${selectedMonths.length} months`
-
   return (
     <div className="pb-24 lg:pb-12">
       <Header title="History" />
-
-      <div className="px-5 mb-4">
-        <MultiSelect
-          values={selectedMonths}
-          onChange={handleMonthsChange}
-          options={allMonths.map(m => ({ value: m, label: formatMonthYear(m) }))}
-          label="Months"
-          noun="months"
-        />
-      </div>
 
       {activeCategories.length > 1 && (
         <div className="px-5 mb-5">
@@ -73,7 +47,7 @@ export function History({ categories, expenses, availableMonths, onDelete, onEdi
       )}
 
       <div className="px-5 mb-5">
-        <HistoryHero total={total} label={heroLabel} count={filtered.length} />
+        <HistoryHero total={total} label={formatMonthYear(selectedYearMonth)} count={filtered.length} />
       </div>
 
       {categoryTotals.length > 0 && (
