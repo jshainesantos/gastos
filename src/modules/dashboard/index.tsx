@@ -2,6 +2,7 @@ import { Settings2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Header } from '../../components/layout/Header'
 import { HeroCard } from './components/HeroCard'
 import { CategoryBreakdown } from './components/CategoryBreakdown'
+import { SpendingInsights } from './components/SpendingInsights'
 import { RecentExpenses } from './components/RecentExpenses'
 import { computeCategoryTotals } from '../../helpers/categories'
 import { formatMonthYear, getCurrentYearMonth } from '../../utils/formatters'
@@ -41,8 +42,11 @@ export function Dashboard({
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
   }
 
+  const prevMonth = shiftMonth(selectedMonth, -1)
   const monthExpenses = getExpensesForMonth(selectedMonth)
+  const prevMonthExpenses = getExpensesForMonth(prevMonth)
   const monthTotal = monthExpenses.reduce((sum, e) => sum + e.amount, 0)
+  const prevMonthTotal = prevMonthExpenses.reduce((sum, e) => sum + e.amount, 0)
   const monthBudget = getBudget(selectedMonth)
   const monthCategoryBudgets = getCategoryBudgets(selectedMonth)
   const categoryTotals = computeCategoryTotals(categories, monthExpenses)
@@ -121,6 +125,14 @@ export function Dashboard({
               categoryBudgets={monthCategoryBudgets}
             />
           )}
+          <SpendingInsights
+            currentExpenses={monthExpenses}
+            prevExpenses={prevMonthExpenses}
+            currentTotal={monthTotal}
+            prevTotal={prevMonthTotal}
+            categories={categories}
+            prevMonthLabel={formatMonthYear(prevMonth).split(' ')[0]}
+          />
           <RecentExpenses
             expenses={monthExpenses}
             categories={categories}
