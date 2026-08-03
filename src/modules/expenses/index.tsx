@@ -65,7 +65,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
   }
 
   return (
-    <div className="pb-24 lg:pb-12">
+    <div className="pb-36 lg:pb-12">
       <Header
         title={editing ? 'Edit Expense' : 'Add Expense'}
         left={editing && onBack ? (
@@ -78,7 +78,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
         ) : undefined}
       />
 
-      <form onSubmit={handleSubmit} noValidate className="px-5 space-y-5">
+      <form onSubmit={handleSubmit} noValidate className="px-5 space-y-3">
         <AmountInput
           amount={amount}
           error={error}
@@ -92,12 +92,12 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
         />
 
         <div>
-          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">Date</p>
+          <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-1.5">Date</p>
           <DatePicker value={date} onChange={setDate} label="Date" />
         </div>
 
         <div>
-          <label htmlFor="note" className="block text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">
+          <label htmlFor="note" className="block text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-1.5">
             Note
           </label>
           <textarea
@@ -114,10 +114,13 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
             <p className="text-right text-[10px] text-zinc-600 mt-1">{note.length}/200</p>
           )}
         </div>
+      </form>
 
+      <div className="fixed bottom-24 left-4 right-4 z-20 lg:hidden">
         <button
-          type="submit"
-          className="w-full py-4 rounded-2xl font-bold text-base tracking-tight transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-white active:scale-[0.98]"
+          type="button"
+          onClick={handleSubmit}
+          className="w-full max-w-[400px] mx-auto block py-3.5 rounded-2xl font-bold text-sm tracking-tight transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-white active:scale-[0.98]"
           style={{
             background: submitted ? '#059669' : '#818CF8',
             boxShadow: submitted ? '0 0 24px rgba(5,150,105,0.3)' : '0 0 24px rgba(129,140,248,0.25)',
@@ -128,7 +131,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
             : editing ? 'Save Changes' : 'Add Expense'
           }
         </button>
-      </form>
+      </div>
     </div>
   )
 }
