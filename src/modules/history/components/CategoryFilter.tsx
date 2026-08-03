@@ -1,3 +1,4 @@
+import { getIconComponent } from '../../../components/CategoryIcon'
 import type { Category } from '../../../types'
 
 interface Props {
@@ -20,39 +21,42 @@ export function CategoryFilter({ categories, selected, onChange }: Props) {
   const allActive = selected.length === 0
 
   return (
-    <div
-      className="flex gap-2 overflow-x-auto"
-      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-    >
+    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
       <button
         onClick={() => onChange([])}
-        className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer"
-        style={
-          allActive
-            ? { background: '#818CF8', color: '#fff', boxShadow: '0 2px 8px rgba(129,140,248,0.35)' }
-            : { background: 'var(--bg-surface-2)', color: '#71717a', border: '1px solid var(--border-dim)' }
-        }
+        className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
+        style={{
+          background: allActive ? '#818CF820' : 'rgba(255,255,255,0.04)',
+          border: `1px solid ${allActive ? '#818CF844' : 'rgba(255,255,255,0.06)'}`,
+        }}
       >
-        All
+        <span
+          className="text-xs font-medium"
+          style={{ color: allActive ? '#818CF8' : '#71717a' }}
+        >
+          All
+        </span>
       </button>
       {categories.map(cat => {
-        const isSelected = selected.includes(cat.id)
+        const active = selected.includes(cat.id)
+        const Icon = getIconComponent(cat.icon)
         return (
           <button
             key={cat.id}
             onClick={() => toggle(cat.id)}
-            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer"
-            style={
-              isSelected
-                ? { background: cat.color + '22', color: cat.color, border: `1px solid ${cat.color}55` }
-                : { background: 'var(--bg-surface-2)', color: '#71717a', border: '1px solid var(--border-dim)' }
-            }
+            className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
+            style={{
+              background: active ? cat.color + '18' : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${active ? cat.color + '44' : 'rgba(255,255,255,0.06)'}`,
+            }}
           >
+            <Icon size={13} style={{ color: active ? cat.color : '#52525b' }} strokeWidth={2} aria-hidden="true" />
             <span
-              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-              style={{ background: cat.color }}
-            />
-            {cat.name}
+              className="text-xs font-medium"
+              style={{ color: active ? cat.color : '#71717a' }}
+            >
+              {cat.name}
+            </span>
           </button>
         )
       })}

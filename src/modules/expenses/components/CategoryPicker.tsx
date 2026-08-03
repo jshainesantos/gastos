@@ -1,4 +1,4 @@
-import { CategoryIcon } from '../../../components/CategoryIcon'
+import { getIconComponent } from '../../../components/CategoryIcon'
 import type { Category } from '../../../types'
 
 interface Props {
@@ -13,24 +13,25 @@ export function CategoryPicker({ categories, selected, onSelect }: Props) {
   return (
     <div>
       <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">Category</p>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+      <div className="flex flex-wrap gap-2">
         {sorted.map(cat => {
           const active = selected === cat.id
+          const Icon = getIconComponent(cat.icon)
           return (
             <button
               key={cat.id}
               type="button"
               onClick={() => onSelect(cat.id)}
               aria-pressed={active}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-full whitespace-nowrap transition-all duration-200 cursor-pointer flex-shrink-0"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
               style={{
-                background: active ? cat.color + '22' : 'var(--chip-bg)',
-                border: `1px solid ${active ? cat.color + '55' : 'var(--border-dim)'}`,
+                background: active ? cat.color + '18' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${active ? cat.color + '44' : 'rgba(255,255,255,0.06)'}`,
               }}
             >
-              <CategoryIcon icon={cat.icon} color={cat.color} size={14} />
+              <Icon size={13} style={{ color: active ? cat.color : '#52525b' }} strokeWidth={2} aria-hidden="true" />
               <span
-                className="text-xs font-semibold"
+                className="text-xs font-medium"
                 style={{ color: active ? cat.color : '#71717a' }}
               >
                 {cat.name}

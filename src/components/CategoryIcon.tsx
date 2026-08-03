@@ -51,6 +51,10 @@ interface Props {
   size?: number
 }
 
+export function getIconComponent(icon: string) {
+  return ICON_MAP[icon] ?? MoreHorizontal
+}
+
 export function CategoryIcon({ icon, color, size = 16 }: Props) {
   const Icon = ICON_MAP[icon] ?? MoreHorizontal
   const pad = Math.round(size * 0.75)
