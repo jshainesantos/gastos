@@ -83,3 +83,6 @@
 [data-theme="light"] .text-accent { color: #818CF8; }
 [data-theme="light"] .hover\:text-accent:hover { color: #818CF8; }
 
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
