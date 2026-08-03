@@ -10,7 +10,6 @@ import type { Category, Expense, MonthlyBudget } from '../../types'
 interface Props {
   userName: string
   categories: Category[]
-  availableMonths: string[]
   selectedMonth: string
   onMonthChange: (month: string) => void
   getExpensesForMonth: (ym: string) => Expense[]
@@ -24,7 +23,6 @@ interface Props {
 export function Dashboard({
   userName,
   categories,
-  availableMonths,
   selectedMonth,
   onMonthChange,
   getExpensesForMonth,
@@ -35,12 +33,13 @@ export function Dashboard({
   onNavigateHistory,
 }: Props) {
   const currentYearMonth = getCurrentYearMonth()
-  const allMonths = availableMonths.includes(currentYearMonth)
-    ? availableMonths
-    : [currentYearMonth, ...availableMonths]
-  const currentIdx = allMonths.indexOf(selectedMonth)
-  const canPrev = currentIdx < allMonths.length - 1
-  const canNext = currentIdx > 0
+  const isCurrentMonth = selectedMonth === currentYearMonth
+
+  function shiftMonth(ym: string, delta: number): string {
+    const [y, m] = ym.split('-').map(Number)
+    const d = new Date(y, m - 1 + delta, 1)
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+  }
 
   const monthExpenses = getExpensesForMonth(selectedMonth)
   const monthTotal = monthExpenses.reduce((sum, e) => sum + e.amount, 0)
@@ -69,26 +68,36 @@ export function Dashboard({
 
       <div className="px-5 mb-4 flex items-center justify-between">
         <button
-          onClick={() => canPrev && onMonthChange(allMonths[currentIdx + 1])}
+          onClick={() => onMonthChange(shiftMonth(selectedMonth, -1))}
           aria-label="Previous month"
           className="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer"
           style={{
-            background: canPrev ? 'rgba(255,255,255,0.06)' : 'transparent',
-            color: canPrev ? '#a1a1aa' : '#3f3f46',
+            background: 'rgba(255,255,255,0.06)',
+            color: '#a1a1aa',
           }}
         >
           <ChevronLeft size={18} />
         </button>
-        <span className="text-sm font-semibold text-zinc-100 min-w-[120px] text-center">
-          {formatMonthYear(selectedMonth)}
-        </span>
+        <div className="flex flex-col items-center min-w-[120px]">
+          <span className="text-sm font-semibold text-zinc-100">
+            {formatMonthYear(selectedMonth)}
+          </span>
+          {!isCurrentMonth && (
+            <button
+              onClick={() => onMonthChange(currentYearMonth)}
+              className="text-[11px] font-medium text-accent cursor-pointer mt-0.5"
+            >
+              Today
+            </button>
+          )}
+        </div>
         <button
-          onClick={() => canNext && onMonthChange(allMonths[currentIdx - 1])}
+          onClick={() => onMonthChange(shiftMonth(selectedMonth, 1))}
           aria-label="Next month"
           className="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer"
           style={{
-            background: canNext ? 'rgba(255,255,255,0.06)' : 'transparent',
-            color: canNext ? '#a1a1aa' : '#3f3f46',
+            background: 'rgba(255,255,255,0.06)',
+            color: '#a1a1aa',
           }}
         >
           <ChevronRight size={18} />

@@ -49,7 +49,6 @@ export default function App() {
           <Dashboard
             userName={userName}
             categories={store.categories}
-            availableMonths={store.availableMonths}
             selectedMonth={selectedMonth}
             onMonthChange={setSelectedMonth}
             getExpensesForMonth={store.getExpensesForMonth}

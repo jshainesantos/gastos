@@ -105,10 +105,10 @@ export function DatePicker({ value, onChange, label }: Props) {
 
           <div
             className="relative rounded-t-3xl"
-            style={{ background: '#18181b' }}
+            style={{ background: 'var(--bg-surface-2)' }}
           >
             <div className="flex justify-center pt-3 pb-2">
-              <div className="w-9 h-1 rounded-full bg-zinc-700" />
+              <div className="w-9 h-1 rounded-full" style={{ background: 'var(--border-md)' }} />
             </div>
 
             <div className="px-5 pb-8">

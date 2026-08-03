@@ -64,10 +64,10 @@ export function Select({ value, onChange, options, placeholder = 'Select…', la
           <div
             ref={sheetRef}
             className="relative rounded-t-3xl overflow-hidden flex flex-col"
-            style={{ background: '#18181b', maxHeight: '70vh' }}
+            style={{ background: 'var(--bg-surface-2)', maxHeight: '70vh' }}
           >
             <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
-              <div className="w-9 h-1 rounded-full bg-zinc-700" />
+              <div className="w-9 h-1 rounded-full" style={{ background: 'var(--border-md)' }} />
             </div>
 
             {label && (
