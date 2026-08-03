@@ -13,20 +13,20 @@ export function CategoryList({ categories, onDeleteRequest }: Props) {
       {[...categories].sort((a, b) => Number(a.isDefault) - Number(b.isDefault)).map(cat => (
         <div
           key={cat.id}
-          className="flex items-center gap-3 px-4 py-3.5 rounded-2xl"
+          className="flex items-center gap-3 px-4 py-3 rounded-2xl"
           style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
         >
-          <CategoryIcon icon={cat.icon} color={cat.color} size={15} />
+          <CategoryIcon icon={cat.icon} color={cat.color} size={13} />
           <span className="flex-1 text-sm font-medium text-zinc-100 tracking-tight">{cat.name}</span>
           {cat.isDefault
-            ? <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-700 px-2">Default</span>
+            ? <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-700 px-1">Default</span>
             : (
               <button
                 onClick={() => onDeleteRequest(cat)}
                 aria-label={`Delete ${cat.name}`}
-                className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-700 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-700 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
               >
-                <X size={14} aria-hidden="true" />
+                <X size={13} aria-hidden="true" />
               </button>
             )
           }

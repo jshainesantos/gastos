@@ -34,6 +34,7 @@ export const ICON_OPTIONS = [
   { value: 'shirt',           label: 'Clothing'  },
   { value: 'bike',            label: 'Bike'      },
   { value: 'wallet',          label: 'Savings'   },
+  { value: 'heart',           label: 'Love'      },
   { value: 'more-horizontal', label: 'Other'     },
 ]
 

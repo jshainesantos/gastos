@@ -19,6 +19,7 @@ import {
   Shirt,
   Bike,
   Wallet,
+  Heart,
   type LucideProps,
 } from 'lucide-react'
 
@@ -43,6 +44,7 @@ const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
   shirt: Shirt,
   bike: Bike,
   wallet: Wallet,
+  heart: Heart,
 }
 
 interface Props {

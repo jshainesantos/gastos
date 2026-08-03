@@ -67,7 +67,7 @@ export function Dashboard({
         }
       />
 
-      <div className="px-5 mb-4 flex items-center justify-center gap-4">
+      <div className="px-5 mb-4 flex items-center justify-between">
         <button
           onClick={() => canPrev && onMonthChange(allMonths[currentIdx + 1])}
           aria-label="Previous month"
