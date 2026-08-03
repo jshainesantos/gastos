@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import { formatCurrency } from '../../../utils/formatters'
 import { getBudgetBarColor } from '../../../helpers/budget'
 import type { Category, MonthlyBudget } from '../../../types'
@@ -23,9 +24,16 @@ function DonutChart({ data }: { data: CategoryTotal[] }) {
   return (
     <div className="relative w-28 h-28 flex-shrink-0">
       <svg width="112" height="112" viewBox="0 0 112 112">
-        {data.map(d => {
+        {data.length === 1 ? (
+          <path
+            d={`M${cx} ${cy - or} A${or} ${or} 0 1 1 ${cx} ${cy + or} A${or} ${or} 0 1 1 ${cx} ${cy - or}Z M${cx} ${cy - ir} A${ir} ${ir} 0 1 0 ${cx} ${cy + ir} A${ir} ${ir} 0 1 0 ${cx} ${cy - ir}Z`}
+            fill={data[0].color}
+            fillRule="evenodd"
+            style={{ cursor: 'default' }}
+          />
+        ) : data.map(d => {
           const sweep = (d.total / total) * (2 * Math.PI)
-          const gap = data.length > 1 ? 0.04 : 0
+          const gap = 0.04
           const start = angle
           const end = angle + sweep - gap
           angle += sweep
@@ -62,6 +70,10 @@ function DonutChart({ data }: { data: CategoryTotal[] }) {
 }
 
 export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets }: Props) {
+  const [expanded, setExpanded] = useState(false)
+  const visible = expanded ? categoryTotals : categoryTotals.slice(0, 4)
+  const hiddenCount = categoryTotals.length - 4
+
   return (
     <div
       className="rounded-3xl p-5"
@@ -73,7 +85,7 @@ export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets 
         <DonutChart data={categoryTotals} />
 
         <div className="flex-1 min-w-0 space-y-2.5">
-          {categoryTotals.slice(0, 4).map(cat => {
+          {visible.map(cat => {
             const catBudget = categoryBudgets.find(b => b.categoryId === cat.id)
             const catRemaining = catBudget ? catBudget.amount - cat.total : null
             const catPct = catBudget ? Math.min((cat.total / catBudget.amount) * 100, 100) : 0
@@ -104,8 +116,13 @@ export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets 
               </div>
             )
           })}
-          {categoryTotals.length > 4 && (
-            <p className="text-xs text-zinc-600">+{categoryTotals.length - 4} more</p>
+          {hiddenCount > 0 && (
+            <button
+              onClick={() => setExpanded(v => !v)}
+              className="flex items-center gap-1 text-xs text-zinc-600 cursor-pointer hover:text-zinc-400 transition-colors"
+            >
+              {expanded ? <><ChevronUp size={14} /> Show less</> : <><ChevronDown size={14} /> +{hiddenCount} more</>}
+            </button>
           )}
         </div>
       </div>

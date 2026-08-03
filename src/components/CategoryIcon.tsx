@@ -19,6 +19,7 @@ import {
   Shirt,
   Bike,
   Wallet,
+  Heart,
   type LucideProps,
 } from 'lucide-react'
 
@@ -43,12 +44,17 @@ const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
   shirt: Shirt,
   bike: Bike,
   wallet: Wallet,
+  heart: Heart,
 }
 
 interface Props {
   icon: string
   color: string
   size?: number
+}
+
+export function getIconComponent(icon: string) {
+  return ICON_MAP[icon] ?? MoreHorizontal
 }
 
 export function CategoryIcon({ icon, color, size = 16 }: Props) {
