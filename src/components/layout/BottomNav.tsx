@@ -20,7 +20,7 @@ export function BottomNav({ current, onNavigate }: Props) {
 
   return (
     <nav
-      className="fixed bottom-5 left-4 right-4 z-30 lg:hidden"
+      className="fixed bottom-5 left-4 right-4 z-30"
       aria-label="Main navigation"
     >
       <ul

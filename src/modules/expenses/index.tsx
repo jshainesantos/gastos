@@ -65,7 +65,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
   }
 
   return (
-    <div className="pb-36 lg:pb-12">
+    <div className="pb-36">
       <Header
         title={editing ? 'Edit Expense' : 'Add Expense'}
         left={editing && onBack ? (
@@ -116,7 +116,7 @@ export function AddExpense({ categories, initialExpense, onAdd, onUpdate, onBack
         </div>
       </form>
 
-      <div className="fixed bottom-24 left-4 right-4 z-20 lg:hidden">
+      <div className="fixed bottom-24 left-4 right-4 z-20">
         <button
           type="button"
           onClick={handleSubmit}

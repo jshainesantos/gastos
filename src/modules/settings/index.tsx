@@ -5,19 +5,23 @@ import { NameForm } from './components/NameForm'
 import { BudgetForm } from './components/BudgetForm'
 import { CategoryBudgetsSection } from './components/CategoryBudgetsSection'
 import { loadTheme, saveTheme, type Theme } from '../../utils/storage'
+import { formatMonthYear } from '../../utils/formatters'
 import type { Category, MonthlyBudget } from '../../types'
 
 interface Props {
   categories: Category[]
-  currentYearMonth: string
-  currentBudget: number
-  currentCategoryBudgets: MonthlyBudget[]
+  selectedMonth: string
+  getBudget: (ym: string, categoryId?: string) => number
+  getCategoryBudgets: (ym: string) => MonthlyBudget[]
   onSetBudget: (yearMonth: string, amount: number, categoryId?: string) => void
   onNameChange: (name: string) => void
 }
 
-export function Settings({ categories, currentYearMonth, currentBudget, currentCategoryBudgets, onSetBudget, onNameChange }: Props) {
+export function Settings({ categories, selectedMonth, getBudget, getCategoryBudgets, onSetBudget, onNameChange }: Props) {
   const [theme, setTheme] = useState<Theme>(() => loadTheme())
+
+  const monthBudget = getBudget(selectedMonth)
+  const monthCategoryBudgets = getCategoryBudgets(selectedMonth)
 
   function handleThemeToggle() {
     const next: Theme = theme === 'dark' ? 'light' : 'dark'
@@ -26,9 +30,10 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
   }
 
   return (
-    <div className="pb-24 lg:pb-12">
+    <div className="pb-24">
       <Header
         title="Settings"
+        subtitle={formatMonthYear(selectedMonth)}
         right={
           <button
             onClick={handleThemeToggle}
@@ -43,14 +48,14 @@ export function Settings({ categories, currentYearMonth, currentBudget, currentC
       <div className="px-5 space-y-4">
         <NameForm onNameChange={onNameChange} />
         <BudgetForm
-          currentYearMonth={currentYearMonth}
-          currentBudget={currentBudget}
+          currentYearMonth={selectedMonth}
+          currentBudget={monthBudget}
           onSetBudget={onSetBudget}
         />
         <CategoryBudgetsSection
           categories={categories}
-          currentYearMonth={currentYearMonth}
-          currentCategoryBudgets={currentCategoryBudgets}
+          currentYearMonth={selectedMonth}
+          currentCategoryBudgets={monthCategoryBudgets}
           onSetBudget={onSetBudget}
         />
       </div>
