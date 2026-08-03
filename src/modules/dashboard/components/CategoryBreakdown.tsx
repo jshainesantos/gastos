@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import { formatCurrency } from '../../../utils/formatters'
 import { getBudgetBarColor } from '../../../helpers/budget'
 import type { Category, MonthlyBudget } from '../../../types'
@@ -62,6 +63,10 @@ function DonutChart({ data }: { data: CategoryTotal[] }) {
 }
 
 export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets }: Props) {
+  const [expanded, setExpanded] = useState(false)
+  const visible = expanded ? categoryTotals : categoryTotals.slice(0, 4)
+  const hiddenCount = categoryTotals.length - 4
+
   return (
     <div
       className="rounded-3xl p-5"
@@ -73,7 +78,7 @@ export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets 
         <DonutChart data={categoryTotals} />
 
         <div className="flex-1 min-w-0 space-y-2.5">
-          {categoryTotals.slice(0, 4).map(cat => {
+          {visible.map(cat => {
             const catBudget = categoryBudgets.find(b => b.categoryId === cat.id)
             const catRemaining = catBudget ? catBudget.amount - cat.total : null
             const catPct = catBudget ? Math.min((cat.total / catBudget.amount) * 100, 100) : 0
@@ -104,8 +109,13 @@ export function CategoryBreakdown({ categoryTotals, monthTotal, categoryBudgets 
               </div>
             )
           })}
-          {categoryTotals.length > 4 && (
-            <p className="text-xs text-zinc-600">+{categoryTotals.length - 4} more</p>
+          {hiddenCount > 0 && (
+            <button
+              onClick={() => setExpanded(v => !v)}
+              className="flex items-center gap-1 text-xs text-zinc-600 cursor-pointer hover:text-zinc-400 transition-colors"
+            >
+              {expanded ? <><ChevronUp size={14} /> Show less</> : <><ChevronDown size={14} /> +{hiddenCount} more</>}
+            </button>
           )}
         </div>
       </div>
