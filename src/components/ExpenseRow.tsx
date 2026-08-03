@@ -20,7 +20,10 @@ export function ExpenseRow({ expense, category, onEdit, onDelete }: Props) {
   const [offset, setOffset] = useState(0)
   const dragging = useRef(false)
 
+  const swipeable = !!(onEdit || onDelete)
+
   function onTouchStart(e: React.TouchEvent) {
+    if (!swipeable) return
     startX.current = e.touches[0].clientX
     startY.current = e.touches[0].clientY
     swiping.current = true
@@ -63,7 +66,7 @@ export function ExpenseRow({ expense, category, onEdit, onDelete }: Props) {
         </div>
       )}
       <div
-        className="flex items-center gap-3 px-4 py-3.5 relative touch-pan-y"
+        className="flex items-center gap-3 px-4 py-3 relative touch-pan-y"
         style={{
           background: 'var(--bg-surface)',
           border: '1px solid var(--border)',

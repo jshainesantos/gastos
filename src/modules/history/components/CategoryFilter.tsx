@@ -26,8 +26,8 @@ export function CategoryFilter({ categories, selected, onChange }: Props) {
         onClick={() => onChange([])}
         className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
         style={{
-          background: allActive ? '#818CF820' : 'rgba(255,255,255,0.04)',
-          border: `1px solid ${allActive ? '#818CF844' : 'rgba(255,255,255,0.06)'}`,
+          background: allActive ? '#818CF820' : 'var(--bg-surface)',
+          border: `1px solid ${allActive ? '#818CF844' : 'var(--border-md)'}`,
         }}
       >
         <span
@@ -46,8 +46,8 @@ export function CategoryFilter({ categories, selected, onChange }: Props) {
             onClick={() => toggle(cat.id)}
             className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
             style={{
-              background: active ? cat.color + '18' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${active ? cat.color + '44' : 'rgba(255,255,255,0.06)'}`,
+              background: active ? cat.color + '18' : 'var(--bg-surface)',
+              border: `1px solid ${active ? cat.color + '44' : 'var(--border-md)'}`,
             }}
           >
             <Icon size={13} style={{ color: active ? cat.color : '#52525b' }} strokeWidth={2} aria-hidden="true" />

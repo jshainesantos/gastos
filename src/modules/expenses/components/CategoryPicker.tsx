@@ -25,8 +25,8 @@ export function CategoryPicker({ categories, selected, onSelect }: Props) {
               aria-pressed={active}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
               style={{
-                background: active ? cat.color + '18' : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${active ? cat.color + '44' : 'rgba(255,255,255,0.06)'}`,
+                background: active ? cat.color + '18' : 'var(--bg-surface)',
+                border: `1px solid ${active ? cat.color + '44' : 'var(--border-md)'}`,
               }}
             >
               <Icon size={13} style={{ color: active ? cat.color : '#52525b' }} strokeWidth={2} aria-hidden="true" />

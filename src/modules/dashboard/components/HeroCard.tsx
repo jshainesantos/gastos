@@ -22,7 +22,7 @@ export function HeroCard({ total, budget, onNavigateSettings }: Props) {
       </div>
 
       <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2 text-center">Total Spent</p>
-      <p className="text-5xl font-bold tracking-tighter text-zinc-50 mb-1 leading-none text-center">
+      <p className="text-4xl font-bold tracking-tighter text-zinc-50 mb-1 leading-none text-center">
         {formatCurrency(total)}
       </p>
 

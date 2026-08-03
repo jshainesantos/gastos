@@ -1,5 +1,3 @@
-import { formatCurrency } from '../../../utils/formatters'
-
 interface Props {
   amount: string
   error: string
@@ -7,9 +5,6 @@ interface Props {
 }
 
 export function AmountInput({ amount, error, onChange }: Props) {
-  const parsedAmount = parseFloat(amount)
-  const hasValidAmount = amount && !isNaN(parsedAmount) && parsedAmount > 0
-
   return (
     <div
       className="rounded-2xl px-4 py-3"
@@ -31,9 +26,6 @@ export function AmountInput({ amount, error, onChange }: Props) {
           aria-label="Amount in PHP"
         />
       </div>
-      {hasValidAmount && (
-        <p className="text-sm text-zinc-500 mt-2 font-medium">{formatCurrency(parsedAmount)}</p>
-      )}
       {error && <p className="text-red-400 text-xs mt-2 font-medium" role="alert">{error}</p>}
     </div>
   )

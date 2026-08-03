@@ -26,10 +26,10 @@ export function BottomNav({ current, onNavigate }: Props) {
       <ul
         className="flex items-center justify-around h-[64px] max-w-[400px] mx-auto px-2 rounded-2xl"
         style={{
-          background: 'rgba(24, 24, 27, 0.85)',
+          background: 'var(--bg-nav)',
           backdropFilter: 'blur(20px)',
           border: '1px solid var(--border-dim)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
         }}
       >
         {visibleItems.map(({ page, label, Icon }) => {
@@ -54,7 +54,7 @@ export function BottomNav({ current, onNavigate }: Props) {
                     className="w-14 h-14 rounded-full flex items-center justify-center -mt-5"
                     style={{
                       background: 'linear-gradient(145deg, #818CF8, #6366F1)',
-                      boxShadow: '0 0 0 4px rgba(24, 24, 27, 0.85), 0 8px 24px rgba(99,102,241,0.5)',
+                      boxShadow: '0 0 0 4px var(--bg-nav), 0 8px 24px rgba(99,102,241,0.5)',
                     }}
                   >
                     <Icon size={22} strokeWidth={2.5} aria-hidden="true" className="text-white" />
