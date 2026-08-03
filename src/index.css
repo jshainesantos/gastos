@@ -7,7 +7,6 @@
 @layer base {
   :root {
     --icon-bg-alpha: 18;
-    --chip-bg: rgba(255,255,255,0.05);
     --bg-canvas: #08080A;
     --bg-surface: #111115;
     --bg-surface-2: #18181D;
@@ -21,7 +20,6 @@
 
   [data-theme="light"] {
     --icon-bg-alpha: 30;
-    --chip-bg: #FFFFFF;
     --bg-canvas: #F2F2F7;
     --bg-surface: #FFFFFF;
     --bg-surface-2: #F3F4F6;

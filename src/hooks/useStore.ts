@@ -90,14 +90,6 @@ export function useStore() {
 
   const currentYearMonth = getCurrentYearMonth()
 
-  const currentMonthExpenses = getExpensesForMonth(currentYearMonth)
-
-  const currentMonthTotal = currentMonthExpenses.reduce((sum, e) => sum + e.amount, 0)
-
-  const currentMonthBudget = getBudget(currentYearMonth)
-  const currentMonthCategoryBudgets = getCategoryBudgets(currentYearMonth)
-
-  // Available months that have expenses
   const availableMonths = [...new Set(expenses.map(e => toYearMonth(e.date)))].sort().reverse()
 
   return {
@@ -113,10 +105,6 @@ export function useStore() {
     getCategoryBudgets,
     getExpensesForMonth,
     currentYearMonth,
-    currentMonthExpenses,
-    currentMonthTotal,
-    currentMonthBudget,
-    currentMonthCategoryBudgets,
     availableMonths,
   }
 }

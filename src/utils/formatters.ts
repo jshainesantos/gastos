@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
 
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-PH', {
@@ -6,10 +6,6 @@ export function formatCurrency(amount: number): string {
     currency: 'PHP',
     minimumFractionDigits: 2,
   }).format(amount)
-}
-
-export function formatDate(dateStr: string): string {
-  return format(parseISO(dateStr), 'MMM d, yyyy')
 }
 
 export function formatMonthYear(yearMonth: string): string {
